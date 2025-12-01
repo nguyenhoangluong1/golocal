@@ -332,14 +332,21 @@ export default function ProfilePage() {
     
     setIsDeletingVehicle(true);
     try {
-      await vehiclesAPI.delete(deleteVehicleDialog.vehicleId);
+      console.log('🗑️ Deleting vehicle:', deleteVehicleDialog.vehicleId);
+      const response = await vehiclesAPI.delete(deleteVehicleDialog.vehicleId);
+      console.log('✅ Delete response:', response);
+      
       setDeleteVehicleDialog(null);
+      
       // Reload vehicles
       if (user?.id) {
+        console.log('🔄 Reloading vehicles for user:', user.id);
         const vehiclesResult = await vehiclesAPI.getAll({ owner_id: user.id });
         const vehiclesData = vehiclesResult.data?.vehicles || vehiclesResult.data || [];
+        console.log('📋 Reloaded vehicles:', vehiclesData.length);
         setMyVehicles(vehiclesData);
       }
+      
       setAlertDialog({
         isOpen: true,
         title: 'Success',
@@ -347,12 +354,31 @@ export default function ProfilePage() {
         type: 'success',
       });
     } catch (error: any) {
-      console.error('Failed to delete vehicle:', error);
+      console.error('❌ Failed to delete vehicle:', error);
+      console.error('❌ Error response:', error.response);
+      console.error('❌ Error status:', error.response?.status);
+      console.error('❌ Error data:', error.response?.data);
+      
       setDeleteVehicleDialog(null);
+      
+      // Better error messages
+      let errorMessage = 'Failed to delete vehicle';
+      if (error.response?.status === 403) {
+        errorMessage = 'You do not have permission to delete this vehicle';
+      } else if (error.response?.status === 404) {
+        errorMessage = 'Vehicle not found';
+      } else if (error.response?.status === 400) {
+        errorMessage = error.response?.data?.detail || 'Cannot delete vehicle with active bookings';
+      } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       setAlertDialog({
         isOpen: true,
         title: 'Error',
-        message: error.response?.data?.detail || 'Failed to delete vehicle',
+        message: errorMessage,
         type: 'error',
       });
     } finally {
