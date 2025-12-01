@@ -90,3 +90,17 @@ Thumbs.db
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+# Lock files (optional - uncomment if you want to ignore)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Build artifacts
+*.map
+*.min.js
+*.min.css
+
+# Local development files
+.env.local
+.env.*.local
