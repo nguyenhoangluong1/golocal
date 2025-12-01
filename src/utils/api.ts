@@ -3,10 +3,19 @@ import { apiCache } from './apiCache';
 import { requestDeduplication } from './requestDeduplication';
 import { getApiBaseUrl, getAuthBaseUrl } from './apiConfig';
 
-const API_BASE_URL = getApiBaseUrl();
+// Get and normalize API base URL - ensure HTTPS for production
+let API_BASE_URL = getApiBaseUrl();
 
-// Debug: Log API base URL in development
-if (import.meta.env.DEV) {
+// CRITICAL: Force HTTPS for production domains at initialization
+const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+const isProductionDomain = productionDomains.some(domain => API_BASE_URL.includes(domain));
+if (isProductionDomain && API_BASE_URL.startsWith('http://')) {
+  console.warn('[api] Converting HTTP to HTTPS at initialization:', API_BASE_URL);
+  API_BASE_URL = API_BASE_URL.replace('http://', 'https://');
+}
+
+// Debug: Log API base URL
+if (import.meta.env.DEV || import.meta.env.PROD) {
   console.log('[api] API_BASE_URL:', API_BASE_URL);
 }
 
@@ -20,18 +29,32 @@ const api = axios.create({
   timeout: 45000, // 45 seconds (increased from 30s for featured data)
 });
 
+// CRITICAL: Override defaults to ensure HTTPS is always used
+// This is a final safety net in case baseURL gets changed somehow
+api.defaults.baseURL = API_BASE_URL;
+
 // Add request interceptor to include auth token and deduplication
 api.interceptors.request.use(
   async (config) => {
     // CRITICAL: Force HTTPS for production domains to prevent Mixed Content errors
-    // This is a runtime safety check in case baseURL was set incorrectly
+    // Check both baseURL and full URL (in case of absolute URLs)
+    const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+    
+    // Fix baseURL if needed
     if (config.baseURL) {
-      const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
       const isProductionDomain = productionDomains.some(domain => config.baseURL!.includes(domain));
-      
       if (isProductionDomain && config.baseURL.startsWith('http://')) {
-        console.warn('[api] Converting HTTP to HTTPS in request interceptor:', config.baseURL);
+        console.warn('[api] Converting HTTP to HTTPS in request interceptor (baseURL):', config.baseURL);
         config.baseURL = config.baseURL.replace('http://', 'https://');
+      }
+    }
+    
+    // Fix absolute URLs in config.url
+    if (config.url && (config.url.startsWith('http://') || config.url.startsWith('https://'))) {
+      const isProductionDomain = productionDomains.some(domain => config.url!.includes(domain));
+      if (isProductionDomain && config.url.startsWith('http://')) {
+        console.warn('[api] Converting HTTP to HTTPS in request interceptor (url):', config.url);
+        config.url = config.url.replace('http://', 'https://');
       }
     }
     
