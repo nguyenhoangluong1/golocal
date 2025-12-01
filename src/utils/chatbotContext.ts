@@ -103,18 +103,20 @@ export function buildChatbotContext(
   const pathname = location.pathname;
   
   if (pathname.startsWith('/vehicle/')) {
+    const vehicleId = (params as Record<string, string | undefined>)?.id;
     context.viewing = {
       type: 'vehicle',
-      id: params.id as string | undefined,
+      id: vehicleId,
       name: additionalData?.viewingVehicle?.name,
       city: additionalData?.viewingVehicle?.location,
       price: additionalData?.viewingVehicle?.pricePerDay,
       vehicleType: additionalData?.viewingVehicle?.type,
     };
   } else if (pathname.startsWith('/place/')) {
+    const placeId = (params as Record<string, string | undefined>)?.id;
     context.viewing = {
       type: 'place',
-      id: params.id as string | undefined,
+      id: placeId,
       name: additionalData?.viewingPlace?.name,
       city: additionalData?.viewingPlace?.city,
     };

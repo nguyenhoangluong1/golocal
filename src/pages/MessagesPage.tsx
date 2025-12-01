@@ -307,22 +307,22 @@ export default function MessagesPage() {
       if (onlyNew && msgs.length > 0) {
         setMessages(prev => {
           // Filter out duplicates by message ID
-          const existingIds = new Set(prev.map(m => m.id));
-          const newMsgs = msgs.filter(m => !existingIds.has(m.id));
+          const existingIds = new Set(prev.map((m: Message) => m.id));
+          const newMsgs = msgs.filter((m: Message) => !existingIds.has(m.id));
           return [...prev, ...newMsgs];
         });
       }
       // If loading more messages (pagination), prepend to existing messages
       else if (limit > 20 && messages.length > 0) {
         // Filter out duplicates and prepend new messages (older messages)
-        const existingIds = new Set(messages.map(m => m.id));
-        const newMsgs = msgs.filter(m => !existingIds.has(m.id));
+        const existingIds = new Set(messages.map((m: Message) => m.id));
+        const newMsgs = msgs.filter((m: Message) => !existingIds.has(m.id));
         setMessages([...newMsgs, ...messages]);
       } else {
         // Initial load or refresh: replace all messages
         // Also filter duplicates in case backend returns duplicates
-        const uniqueMsgs = msgs.filter((msg, index, self) => 
-          index === self.findIndex(m => m.id === msg.id)
+        const uniqueMsgs = msgs.filter((msg: Message, index: number, self: Message[]) => 
+          index === self.findIndex((m: Message) => m.id === msg.id)
         );
         setMessages(uniqueMsgs);
       }
