@@ -167,12 +167,18 @@ export default function HostYourVehiclePage() {
       if (!formData.type) newErrors.type = 'Vehicle type is required';
       if (!formData.brand.trim()) newErrors.brand = 'Brand is required';
       if (!formData.year || formData.year < 1990 || formData.year > new Date().getFullYear() + 1) {
-        newErrors.year = 'Invalid year';
+        newErrors.year = `Year must be between 1990 and ${new Date().getFullYear() + 1}`;
       }
       if (!formData.pricePerDay || formData.pricePerDay <= 0) {
         newErrors.pricePerDay = 'Price must be greater than 0';
       }
+      if (formData.pricePerDay && formData.pricePerDay < 50000) {
+        newErrors.pricePerDay = 'Price should be at least 50,000 VND per day';
+      }
       if (!formData.description.trim()) newErrors.description = 'Description is required';
+      if (formData.description.trim().length < 20) {
+        newErrors.description = 'Description must be at least 20 characters';
+      }
       if (!formData.licensePlate.trim()) newErrors.licensePlate = 'License plate is required';
     }
 
@@ -217,14 +223,21 @@ export default function HostYourVehiclePage() {
 
       // Get coordinates from address
       if (!lat || !lng) {
-        const coords = await geocodeAddress(formData.address, formData.city);
-        if (!coords) {
-          showError('Could not find coordinates for the address. Please check the address.');
+        try {
+          const coords = await geocodeAddress(formData.address, formData.city);
+          if (!coords) {
+            showError('Could not find coordinates for the address. Please check the address and try again.');
+            setLoading(false);
+            return;
+          }
+          setLat(coords.lat);
+          setLng(coords.lng);
+        } catch (error) {
+          console.error('Geocoding error:', error);
+          showError('Failed to geocode address. Please check your internet connection and try again.');
           setLoading(false);
           return;
         }
-        setLat(coords.lat);
-        setLng(coords.lng);
       }
 
       // Upload images
@@ -265,12 +278,59 @@ export default function HostYourVehiclePage() {
 
       const response = await vehiclesAPI.create(vehicleData);
       
-      if (response.data) {
+      // Log response for debugging
+      console.log('✅ Vehicle creation response:', response);
+      console.log('✅ Response status:', response?.status);
+      console.log('✅ Response data:', response?.data);
+      
+      // If we reach here without error, the request was successful
+      // Backend returns 201 for created resources
+      try {
+        console.log('✅ Setting success modal to true');
         setShowSuccessModal(true);
+        console.log('✅ Success modal state updated');
+        
+        // Reset form after successful submission
+        setFormData({
+          name: '',
+          type: '',
+          brand: '',
+          year: new Date().getFullYear(),
+          pricePerDay: 0,
+          address: '',
+          district: '',
+          city: '',
+          description: '',
+          features: [],
+          licensePlate: '',
+          images: [],
+        });
+        setImagePreviews([]);
+        setLat(null);
+        setLng(null);
+        console.log('✅ Form reset completed');
+      } catch (stateError) {
+        console.error('❌ Error setting success state:', stateError);
+        // Even if state update fails, show success message
+        showError('Vehicle created successfully, but there was an error updating the UI. Please refresh the page.');
       }
     } catch (error: any) {
       console.error('Error creating vehicle:', error);
-      showError(error.response?.data?.detail || 'Error creating vehicle. Please try again.');
+      console.error('Error response:', error.response);
+      console.error('Error message:', error.message);
+      
+      // Handle different error types
+      if (error.response) {
+        // Server responded with error status
+        const errorDetail = error.response?.data?.detail || error.response?.data?.message || 'Error creating vehicle. Please try again.';
+        showError(errorDetail);
+      } else if (error.request) {
+        // Request was made but no response received
+        showError('No response from server. Please check your internet connection and try again.');
+      } else {
+        // Something else happened
+        showError(error.message || 'An unexpected error occurred. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -416,8 +476,13 @@ export default function HostYourVehiclePage() {
                       value={formData.name}
                       onChange={handleInputChange}
                       placeholder="e.g., Honda SH 150i 2023"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border ${
+                        errors.name ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
+                      } focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors`}
                     />
+                    {errors.name && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
+                    )}
                   </div>
 
                   <div>
@@ -428,13 +493,18 @@ export default function HostYourVehiclePage() {
                       name="type"
                       value={formData.type}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border ${
+                        errors.type ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
+                      } focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors`}
                     >
                       <option value="">Select type</option>
                       <option value="MOTORBIKE">Motorbike</option>
                       <option value="CAR">Car</option>
                       <option value="BICYCLE">Bicycle</option>
                     </select>
+                    {errors.type && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.type}</p>
+                    )}
                   </div>
 
                   <div>
@@ -447,8 +517,13 @@ export default function HostYourVehiclePage() {
                       value={formData.brand}
                       onChange={handleInputChange}
                       placeholder="e.g., Honda"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border ${
+                        errors.brand ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
+                      } focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors`}
                     />
+                    {errors.brand && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.brand}</p>
+                    )}
                   </div>
 
                   <div>
@@ -462,8 +537,13 @@ export default function HostYourVehiclePage() {
                       onChange={handleInputChange}
                       min="1990"
                       max={new Date().getFullYear() + 1}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border ${
+                        errors.year ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
+                      } focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors`}
                     />
+                    {errors.year && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.year}</p>
+                    )}
                   </div>
 
                   <div>
@@ -476,8 +556,13 @@ export default function HostYourVehiclePage() {
                       value={formData.licensePlate}
                       onChange={handleInputChange}
                       placeholder="e.g., 59-X1 12345"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border ${
+                        errors.licensePlate ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
+                      } focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors`}
                     />
+                    {errors.licensePlate && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.licensePlate}</p>
+                    )}
                   </div>
 
                   <div>
@@ -490,8 +575,15 @@ export default function HostYourVehiclePage() {
                       value={formData.pricePerDay}
                       onChange={handleInputChange}
                       placeholder="150000"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors"
+                      min="50000"
+                      step="10000"
+                      className={`w-full px-4 py-3 rounded-xl border ${
+                        errors.pricePerDay ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
+                      } focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors`}
                     />
+                    {errors.pricePerDay && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.pricePerDay}</p>
+                    )}
                   </div>
                 </div>
 
@@ -505,8 +597,18 @@ export default function HostYourVehiclePage() {
                     onChange={handleInputChange}
                     rows={4}
                     placeholder="Describe your vehicle, its condition, and any special features..."
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-700 dark:text-white"
+                    className={`w-full px-4 py-3 rounded-xl border ${
+                      errors.description ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                    } focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-700 dark:text-white`}
                   />
+                  {errors.description && (
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description}</p>
+                  )}
+                  {formData.description && !errors.description && (
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                      {formData.description.length} / 20 characters minimum
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -578,8 +680,13 @@ export default function HostYourVehiclePage() {
                       value={formData.address}
                       onChange={handleInputChange}
                       placeholder="e.g., 214 Lê Hồng Phong"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border ${
+                        errors.address ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
+                      } focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors`}
                     />
+                    {errors.address && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.address}</p>
+                    )}
                   </div>
 
                   <div>
@@ -592,8 +699,13 @@ export default function HostYourVehiclePage() {
                       value={formData.district}
                       onChange={handleInputChange}
                       placeholder="e.g., Quận 1"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border ${
+                        errors.district ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
+                      } focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors`}
                     />
+                    {errors.district && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.district}</p>
+                    )}
                   </div>
 
                   <div>
@@ -604,7 +716,9 @@ export default function HostYourVehiclePage() {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors"
+                      className={`w-full px-4 py-3 rounded-xl border ${
+                        errors.city ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
+                      } focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 focus:border-transparent bg-white dark:bg-gray-800 dark:text-white transition-colors`}
                     >
                       <option value="">Select city</option>
                       {cities.map((city) => (
@@ -613,6 +727,9 @@ export default function HostYourVehiclePage() {
                         </option>
                       ))}
                     </select>
+                    {errors.city && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.city}</p>
+                    )}
                   </div>
                 </div>
 
