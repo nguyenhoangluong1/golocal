@@ -68,6 +68,17 @@ export const getApiBaseUrl = (): string => {
  */
 export const getAuthBaseUrl = (): string => {
   const apiUrl = getApiBaseUrl();
-  return apiUrl.replace('/api', '') || 'http://localhost:5000';
+  let authUrl = apiUrl.replace('/api', '') || 'http://localhost:5000';
+  
+  // CRITICAL: Ensure HTTPS for production domains
+  const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+  const isProductionDomain = productionDomains.some(domain => authUrl.includes(domain));
+  
+  if (isProductionDomain && authUrl.startsWith('http://')) {
+    console.warn('[apiConfig] Converting HTTP to HTTPS for auth base URL:', authUrl);
+    authUrl = authUrl.replace('http://', 'https://');
+  }
+  
+  return authUrl;
 };
 

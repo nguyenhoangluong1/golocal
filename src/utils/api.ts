@@ -33,6 +33,31 @@ const api = axios.create({
 // This is a final safety net in case baseURL gets changed somehow
 api.defaults.baseURL = API_BASE_URL;
 
+// CRITICAL: Override axios adapter to intercept ALL requests and force HTTPS
+// This is the ultimate safety net that catches everything
+const originalAdapter = api.defaults.adapter || axios.defaults.adapter;
+if (originalAdapter && typeof originalAdapter === 'function') {
+  api.defaults.adapter = async (config) => {
+    // Force HTTPS for production domains before request is sent
+    const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+    const fullUrl = (config.baseURL || '') + (config.url || '');
+    const isProductionDomain = productionDomains.some(domain => fullUrl.includes(domain));
+    
+    if (isProductionDomain) {
+      if (config.baseURL && config.baseURL.startsWith('http://')) {
+        console.warn('[api] Adapter: Converting HTTP to HTTPS (baseURL):', config.baseURL);
+        config.baseURL = config.baseURL.replace('http://', 'https://');
+      }
+      if (config.url && config.url.startsWith('http://')) {
+        console.warn('[api] Adapter: Converting HTTP to HTTPS (url):', config.url);
+        config.url = config.url.replace('http://', 'https://');
+      }
+    }
+    
+    return originalAdapter(config);
+  };
+}
+
 // Add request interceptor to include auth token and deduplication
 api.interceptors.request.use(
   async (config) => {
@@ -326,7 +351,16 @@ export const imagesAPI = {
 };
 
 // Admin API (hidden endpoint)
-const ADMIN_BASE_URL = getAuthBaseUrl();
+let ADMIN_BASE_URL = getAuthBaseUrl();
+
+// CRITICAL: Force HTTPS for production domains at initialization
+const adminProductionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+const isAdminProductionDomain = adminProductionDomains.some(domain => ADMIN_BASE_URL.includes(domain));
+if (isAdminProductionDomain && ADMIN_BASE_URL.startsWith('http://')) {
+  console.warn('[api] Converting HTTP to HTTPS for admin API at initialization:', ADMIN_BASE_URL);
+  ADMIN_BASE_URL = ADMIN_BASE_URL.replace('http://', 'https://');
+}
+
 const ADMIN_PREFIX = '/internal/control';
 
 // Create admin API instance with auth headers
@@ -337,8 +371,30 @@ const adminApi = axios.create({
   },
 });
 
+// CRITICAL: Override defaults to ensure HTTPS is always used
+adminApi.defaults.baseURL = ADMIN_BASE_URL;
+
 // Add auth interceptor for admin API
 adminApi.interceptors.request.use((config) => {
+  // CRITICAL: Force HTTPS for production domains
+  const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+  
+  if (config.baseURL) {
+    const isProductionDomain = productionDomains.some(domain => config.baseURL!.includes(domain));
+    if (isProductionDomain && config.baseURL.startsWith('http://')) {
+      console.warn('[api] Converting HTTP to HTTPS in admin API interceptor (baseURL):', config.baseURL);
+      config.baseURL = config.baseURL.replace('http://', 'https://');
+    }
+  }
+  
+  if (config.url && (config.url.startsWith('http://') || config.url.startsWith('https://'))) {
+    const isProductionDomain = productionDomains.some(domain => config.url!.includes(domain));
+    if (isProductionDomain && config.url.startsWith('http://')) {
+      console.warn('[api] Converting HTTP to HTTPS in admin API interceptor (url):', config.url);
+      config.url = config.url.replace('http://', 'https://');
+    }
+  }
+  
   const token = localStorage.getItem('access_token');
   const adminKey = import.meta.env.VITE_ADMIN_API_KEY;
   
