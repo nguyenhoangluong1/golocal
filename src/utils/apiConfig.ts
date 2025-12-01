@@ -54,12 +54,30 @@ export const getApiBaseUrl = (): string => {
   const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
   const isProductionDomain = productionDomains.some(domain => normalized.includes(domain));
   
+  let finalUrl = normalized;
+  
   if (isProductionDomain && normalized.startsWith('http://')) {
     console.warn('[apiConfig] Converting HTTP to HTTPS for production domain:', normalized);
-    return normalized.replace('http://', 'https://');
+    finalUrl = normalized.replace('http://', 'https://');
   }
   
-  return normalized;
+  // CRITICAL: Ensure /api suffix for production domains
+  // If VITE_API_URL doesn't have /api, add it
+  if (isProductionDomain && !finalUrl.endsWith('/api') && !finalUrl.endsWith('/api/')) {
+    // Check if URL already has /api somewhere (might be in the middle)
+    if (!finalUrl.includes('/api')) {
+      // Add /api if it's missing
+      finalUrl = finalUrl.endsWith('/') ? finalUrl + 'api' : finalUrl + '/api';
+      console.warn('[apiConfig] Added missing /api suffix to URL:', finalUrl);
+    }
+  }
+  
+  // Log final URL for debugging
+  if (import.meta.env.PROD || import.meta.env.DEV) {
+    console.log('[apiConfig] Final API Base URL:', finalUrl);
+  }
+  
+  return finalUrl;
 };
 
 /**
