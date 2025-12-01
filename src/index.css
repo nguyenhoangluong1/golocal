@@ -1,0 +1,262 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset for full-width layout */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Better text rendering */
+body {
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+  color: #111827;
+}
+
+/* Make bold text bolder */
+b, strong, a {
+  font-weight: 700;
+}
+
+/* Headings - bold (Tesla style) */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+/* Paragraphs - medium weight (Tesla style) */
+p {
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.font-bold {
+  font-weight: 700 !important;
+}
+
+.font-semibold {
+  font-weight: 600 !important;
+}
+
+.font-extrabold {
+  font-weight: 800 !important;
+}
+
+/* Dark mode activated */
+html.dark body {
+  background-color: rgb(17 24 39); /* gray-900 */
+  color: rgb(243 244 246); /* gray-100 */
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2933;
+  border-radius: 6px;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0f172a;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   HAND-DRAWN SKETCHY STYLE (Claude-inspired)
+   ============================================ */
+
+/* Subtle hand-drawn border - for cards and containers */
+.hand-drawn-subtle {
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  border: 1.5px solid;
+}
+
+/* Medium hand-drawn border - for buttons and important elements */
+.hand-drawn-medium {
+  border-radius: 255px 25px 225px 25px / 25px 225px 25px 255px;
+  border: 2px solid;
+  position: relative;
+}
+
+/* Pronounced hand-drawn border - for decorative elements */
+.hand-drawn-pronounced {
+  border-radius: 255px 35px 225px 35px / 35px 225px 35px 255px;
+  border: 2.5px solid;
+  position: relative;
+}
+
+/* Hand-drawn card style */
+.hand-drawn-card {
+  border-radius: 255px 20px 225px 20px / 20px 225px 20px 255px;
+  border: 2px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.hand-drawn-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Hand-drawn button style */
+.hand-drawn-button {
+  border-radius: 255px 20px 225px 20px / 20px 225px 20px 255px;
+  border: 2px solid;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.hand-drawn-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Hand-drawn badge/tag style - for small decorative elements */
+.hand-drawn-badge {
+  border-radius: 255px 10px 225px 10px / 10px 225px 10px 255px;
+  border: 1.5px solid;
+  display: inline-block;
+}
+
+/* Hand-drawn input style */
+.hand-drawn-input {
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  border: 1.5px solid;
+  transition: all 0.2s ease;
+}
+
+.hand-drawn-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Claude-style message bubble */
+.claude-bubble {
+  border-radius: 18px 18px 18px 4px; /* Organic, slightly irregular */
+  padding: 12px 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.claude-bubble-user {
+  border-radius: 18px 18px 4px 18px; /* Mirror for user messages */
+}
+
+/* Subtle animation for hand-drawn elements (optional, very subtle) */
+@keyframes sketchy-subtle {
+  0%, 100% { transform: rotate(0deg) translate(0, 0); }
+  25% { transform: rotate(0.3deg) translate(0.5px, 0.5px); }
+  50% { transform: rotate(0deg) translate(0, 0); }
+  75% { transform: rotate(-0.3deg) translate(-0.5px, -0.5px); }
+}
+
+/* Apply subtle animation only on hover for interactive elements */
+.hand-drawn-interactive:hover {
+  animation: sketchy-subtle 0.4s ease-in-out;
+}
+
+/* Claude-style typography adjustments */
+.claude-text {
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+.claude-heading {
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+/* Toast Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Skeleton Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    #f1f5f9 0%,
+    #e2e8f0 20%,
+    #f1f5f9 40%,
+    #f1f5f9 100%
+  );
+  background-size: 1000px 100%;
+}
+
+html.dark .animate-shimmer {
+  background: linear-gradient(
+    to right,
+    #374151 0%,
+    #4b5563 20%,
+    #374151 40%,
+    #374151 100%
+  );
+  background-size: 1000px 100%;
+}
