@@ -47,7 +47,19 @@ export const normalizeApiUrl = (url: string | undefined): string => {
  */
 export const getApiBaseUrl = (): string => {
   const envUrl = import.meta.env.VITE_API_URL;
-  return normalizeApiUrl(envUrl);
+  const normalized = normalizeApiUrl(envUrl);
+  
+  // Runtime safety check: Force HTTPS for production domains
+  // This is a double-check in case normalizeApiUrl didn't catch it
+  const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+  const isProductionDomain = productionDomains.some(domain => normalized.includes(domain));
+  
+  if (isProductionDomain && normalized.startsWith('http://')) {
+    console.warn('[apiConfig] Converting HTTP to HTTPS for production domain:', normalized);
+    return normalized.replace('http://', 'https://');
+  }
+  
+  return normalized;
 };
 
 /**

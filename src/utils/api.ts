@@ -5,6 +5,11 @@ import { getApiBaseUrl, getAuthBaseUrl } from './apiConfig';
 
 const API_BASE_URL = getApiBaseUrl();
 
+// Debug: Log API base URL in development
+if (import.meta.env.DEV) {
+  console.log('[api] API_BASE_URL:', API_BASE_URL);
+}
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -18,6 +23,18 @@ const api = axios.create({
 // Add request interceptor to include auth token and deduplication
 api.interceptors.request.use(
   async (config) => {
+    // CRITICAL: Force HTTPS for production domains to prevent Mixed Content errors
+    // This is a runtime safety check in case baseURL was set incorrectly
+    if (config.baseURL) {
+      const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+      const isProductionDomain = productionDomains.some(domain => config.baseURL!.includes(domain));
+      
+      if (isProductionDomain && config.baseURL.startsWith('http://')) {
+        console.warn('[api] Converting HTTP to HTTPS in request interceptor:', config.baseURL);
+        config.baseURL = config.baseURL.replace('http://', 'https://');
+      }
+    }
+    
     const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
