@@ -21,6 +21,19 @@ interface VehicleForm {
   images: File[];
 }
 
+// Fallback coordinates for major Vietnamese cities
+const cityCoordinates: Record<string, { lat: number; lng: number }> = {
+  'Ho Chi Minh City': { lat: 10.8231, lng: 106.6297 },
+  'Hanoi': { lat: 21.0285, lng: 105.8542 },
+  'Da Nang': { lat: 16.0544, lng: 108.2022 },
+  'Hoi An': { lat: 15.8801, lng: 108.3380 },
+  'Nha Trang': { lat: 12.2388, lng: 109.1967 },
+  'Can Tho': { lat: 10.0452, lng: 105.7469 },
+  'Thành phố Hồ Chí Minh': { lat: 10.8231, lng: 106.6297 },
+  'Hà Nội': { lat: 21.0285, lng: 105.8542 },
+  'Đà Nẵng': { lat: 16.0544, lng: 108.2022 },
+};
+
 export default function HostYourVehiclePage() {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
@@ -131,32 +144,73 @@ export default function HostYourVehiclePage() {
   };
 
   const geocodeAddress = async (address: string, city: string): Promise<{ lat: number; lng: number } | null> => {
-    try {
-      const fullAddress = `${address}, ${city}, Vietnam`;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
-      
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1`,
-        {
-          headers: { 'Accept-Language': 'vi' },
+    // Try multiple address formats for better geocoding success
+    const addressFormats = [
+      `${address}, ${city}, Vietnam`,
+      `${address}, ${city}`,
+      `${city}, ${address}, Vietnam`,
+      address, // Try just the address
+      city, // Fallback to city only
+    ];
+
+    for (const addressFormat of addressFormats) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+        
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressFormat)}&limit=1&countrycodes=vn`;
+        
+        console.log(`🔍 Geocoding attempt: ${addressFormat}`);
+        
+        const response = await fetch(url, {
+          headers: { 
+            'Accept-Language': 'vi',
+            'User-Agent': 'GoLocal/1.0' // Nominatim requires User-Agent
+          },
           signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          console.warn(`⚠️ Geocoding failed with status ${response.status}`);
+          continue; // Try next format
         }
-      );
-      clearTimeout(timeoutId);
-      const data = await response.json();
-      
-      if (data && data.length > 0) {
-        return {
-          lat: parseFloat(data[0].lat),
-          lng: parseFloat(data[0].lon)
-        };
+        
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+          const result = {
+            lat: parseFloat(data[0].lat),
+            lng: parseFloat(data[0].lon)
+          };
+          console.log(`✅ Geocoding successful: ${result.lat}, ${result.lng}`);
+          return result;
+        }
+      } catch (error: any) {
+        // If it's an abort error, continue to next format
+        if (error.name === 'AbortError') {
+          console.warn(`⏱️ Geocoding timeout for: ${addressFormat}`);
+          continue;
+        }
+        console.warn(`⚠️ Geocoding error for "${addressFormat}":`, error.message);
+        continue; // Try next format
       }
-      return null;
-    } catch (error) {
-      console.error('Geocoding error:', error);
-      return null;
     }
+
+    // If all formats fail, use city center as fallback
+    const cityKey = Object.keys(cityCoordinates).find(
+      key => key.toLowerCase() === city.toLowerCase() || city.toLowerCase().includes(key.toLowerCase())
+    );
+    
+    if (cityKey) {
+      console.log(`📍 Using fallback coordinates for city: ${cityKey}`);
+      return cityCoordinates[cityKey];
+    }
+
+    // Last resort: use Ho Chi Minh City center
+    console.warn('⚠️ Could not geocode address, using Ho Chi Minh City center as fallback');
+    return { lat: 10.8231, lng: 106.6297 };
   };
 
   const validateForm = (): boolean => {
@@ -226,17 +280,37 @@ export default function HostYourVehiclePage() {
         try {
           const coords = await geocodeAddress(formData.address, formData.city);
           if (!coords) {
-            showError('Could not find coordinates for the address. Please check the address and try again.');
-            setLoading(false);
-            return;
+            // This should not happen as geocodeAddress now always returns coordinates (with fallback)
+            showWarning('Using approximate coordinates for the city center. Please verify the location on the map after submission.');
+            setLat(10.8231); // Ho Chi Minh City center as last resort
+            setLng(106.6297);
+          } else {
+            setLat(coords.lat);
+            setLng(coords.lng);
+            // If we used fallback coordinates, show a warning
+            const cityKey = Object.keys(cityCoordinates).find(
+              key => key.toLowerCase() === formData.city.toLowerCase() || formData.city.toLowerCase().includes(key.toLowerCase())
+            );
+            if (cityKey && Math.abs(coords.lat - cityCoordinates[cityKey].lat) < 0.01 && 
+                Math.abs(coords.lng - cityCoordinates[cityKey].lng) < 0.01) {
+              showWarning('Using approximate city center coordinates. The exact address location could not be found.');
+            }
           }
-          setLat(coords.lat);
-          setLng(coords.lng);
         } catch (error) {
           console.error('Geocoding error:', error);
-          showError('Failed to geocode address. Please check your internet connection and try again.');
-          setLoading(false);
-          return;
+          // Use city center as fallback instead of failing
+          const cityKey = Object.keys(cityCoordinates).find(
+            key => key.toLowerCase() === formData.city.toLowerCase() || formData.city.toLowerCase().includes(key.toLowerCase())
+          );
+          if (cityKey) {
+            setLat(cityCoordinates[cityKey].lat);
+            setLng(cityCoordinates[cityKey].lng);
+            showWarning('Could not geocode exact address. Using city center coordinates. You can update the location later.');
+          } else {
+            setLat(10.8231);
+            setLng(106.6297);
+            showWarning('Using default coordinates. Please verify the location after submission.');
+          }
         }
       }
 
