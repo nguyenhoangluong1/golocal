@@ -5,22 +5,30 @@
 
 /**
  * Normalize API URL - ensures it's a complete absolute URL
- * Handles cases where VITE_API_URL might be missing protocol
+ * Handles cases where VITE_API_URL might be missing protocol or using http:// for production
  */
 export const normalizeApiUrl = (url: string | undefined): string => {
   if (!url) {
     return 'http://localhost:5000/api';
   }
 
-  // If URL already has protocol, return as is
+  // Production domains that should always use HTTPS
+  const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+  const isProductionDomain = productionDomains.some(domain => url.includes(domain));
+
+  // If URL already has protocol
   if (url.startsWith('http://') || url.startsWith('https://')) {
+    // Force HTTPS for production domains (fix Mixed Content errors)
+    if (isProductionDomain && url.startsWith('http://')) {
+      return url.replace('http://', 'https://');
+    }
     return url;
   }
 
   // If URL looks like a domain (contains dots and doesn't start with /)
   if (url.includes('.') && !url.startsWith('/')) {
     // Add https:// for production domains
-    if (url.includes('.railway.app') || url.includes('.vercel.app') || url.includes('.')) {
+    if (isProductionDomain) {
       return `https://${url}`;
     }
   }
