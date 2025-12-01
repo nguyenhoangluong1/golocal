@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
-import axios from 'axios';
-import { getAuthBaseUrl, ensureHttps } from '../utils/apiConfig';
-
-// CRITICAL: Normalize URL to ensure HTTPS
-let AUTH_BASE_URL = getAuthBaseUrl();
-AUTH_BASE_URL = ensureHttps(AUTH_BASE_URL);
+import { authApi } from '../utils/authApi';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -20,7 +15,7 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      await axios.post(`${AUTH_BASE_URL}/auth/forgot-password`, { email });
+      await authApi.post('/auth/forgot-password', { email });
       setSuccess(true);
     } catch (err: any) {
       console.error('Forgot password error:', err);

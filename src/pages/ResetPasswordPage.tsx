@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
-import axios from 'axios';
-import { getAuthBaseUrl, ensureHttps } from '../utils/apiConfig';
-
-// CRITICAL: Normalize URL to ensure HTTPS
-let AUTH_BASE_URL = getAuthBaseUrl();
-AUTH_BASE_URL = ensureHttps(AUTH_BASE_URL);
+import { authApi } from '../utils/authApi';
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -52,7 +47,7 @@ export default function ResetPasswordPage() {
     setLoading(true);
 
     try {
-      await axios.post(`${AUTH_BASE_URL}/auth/reset-password`, {
+      await authApi.post('/auth/reset-password', {
         token,
         new_password: password
       });

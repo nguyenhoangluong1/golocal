@@ -1,12 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import axios from 'axios';
-import { getAuthBaseUrl, ensureHttps } from '../utils/apiConfig';
-
-// Auth endpoints are at root level (no /api prefix)
-// CRITICAL: Normalize URL to ensure HTTPS
-let AUTH_BASE_URL = getAuthBaseUrl();
-AUTH_BASE_URL = ensureHttps(AUTH_BASE_URL);
+import { authApi } from '../utils/authApi';
 
 export interface User {
   id: string;
@@ -73,12 +67,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchCurrentUser = async (token: string) => {
     try {
-      const response = await axios.get(`${AUTH_BASE_URL}/auth/me`, {
+      // CRITICAL: Use authApi instance instead of raw axios to ensure HTTPS enforcement
+      const response = await authApi.get('/auth/me', {
         headers: {
           Authorization: `Bearer ${token}`
         },
-        // Add timeout to prevent hanging
-        timeout: 15000, // Increased timeout for slow connections
         // Don't throw on network errors - let us handle gracefully
         validateStatus: (status) => status < 500 // Don't throw on 4xx, only 5xx
       });
@@ -127,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post(`${AUTH_BASE_URL}/auth/login`, {
+      const response = await authApi.post('/auth/login', {
         email,
         password
       });
@@ -143,7 +136,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (email: string, password: string, name: string, phone?: string) => {
     try {
-      const response = await axios.post(`${AUTH_BASE_URL}/auth/register`, {
+      const response = await authApi.post('/auth/register', {
         email,
         password,
         name,
@@ -171,7 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem('access_token');
     if (token) {
       try {
-        const response = await axios.get(`${AUTH_BASE_URL}/auth/me`, {
+        const response = await authApi.get('/auth/me', {
           headers: {
             Authorization: `Bearer ${token}`
           },

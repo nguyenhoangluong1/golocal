@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
-import { getAuthBaseUrl, ensureHttps } from '../utils/apiConfig';
-
-// CRITICAL: Normalize URL to ensure HTTPS
-let AUTH_BASE_URL = getAuthBaseUrl();
-AUTH_BASE_URL = ensureHttps(AUTH_BASE_URL);
+import { authApi } from '../utils/authApi';
 
 export default function FacebookCallbackPage() {
   const [searchParams] = useSearchParams();
@@ -36,7 +31,7 @@ export default function FacebookCallbackPage() {
 
       try {
         // Exchange code for token
-        const response = await axios.post(`${AUTH_BASE_URL}/auth/facebook`, {
+        const response = await authApi.post('/auth/facebook', {
           code,
           redirect_uri: `${window.location.origin}/auth/facebook/callback`
         });
