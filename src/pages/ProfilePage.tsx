@@ -11,8 +11,10 @@ import { vehiclesAPI, reviewsAPI } from '../utils/api';
 import { bookingsAPI, paymentsAPI, favoritesAPI } from '../utils/api';
 import { useFavorites } from '../hooks/useFavorites';
 
-import { getApiBaseUrl } from '../utils/apiConfig';
-const API_URL = getApiBaseUrl();
+import { getApiBaseUrl, ensureHttps } from '../utils/apiConfig';
+// CRITICAL: Normalize URL to ensure HTTPS
+let API_URL = getApiBaseUrl();
+API_URL = ensureHttps(API_URL);
 
 interface Booking {
   id: string;

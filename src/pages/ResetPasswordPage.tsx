@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
-import { getAuthBaseUrl } from '../utils/apiConfig';
+import { getAuthBaseUrl, ensureHttps } from '../utils/apiConfig';
 
-const AUTH_BASE_URL = getAuthBaseUrl();
+// CRITICAL: Normalize URL to ensure HTTPS
+let AUTH_BASE_URL = getAuthBaseUrl();
+AUTH_BASE_URL = ensureHttps(AUTH_BASE_URL);
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();

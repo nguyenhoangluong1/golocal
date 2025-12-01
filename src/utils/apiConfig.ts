@@ -82,3 +82,21 @@ export const getAuthBaseUrl = (): string => {
   return authUrl;
 };
 
+/**
+ * Normalize any URL to ensure HTTPS for production domains
+ * Use this function for any URL that might be used with axios or fetch
+ */
+export const ensureHttps = (url: string): string => {
+  if (!url) return url;
+  
+  const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
+  const isProductionDomain = productionDomains.some(domain => url.includes(domain));
+  
+  if (isProductionDomain && url.startsWith('http://')) {
+    console.warn('[apiConfig] ensureHttps: Converting HTTP to HTTPS:', url);
+    return url.replace('http://', 'https://');
+  }
+  
+  return url;
+};
+
