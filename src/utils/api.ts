@@ -83,6 +83,26 @@ api.interceptors.request.use(
       }
     }
     
+    // CRITICAL: Ensure final URL is HTTPS and log it for debugging
+    const finalUrl = (config.baseURL || '') + (config.url || '');
+    if (productionDomains.some(domain => finalUrl.includes(domain))) {
+      if (finalUrl.includes('http://')) {
+        console.error('[api] ERROR: URL still contains http:// after all checks:', finalUrl);
+        // Force fix it one more time
+        if (config.baseURL && config.baseURL.includes('http://')) {
+          config.baseURL = config.baseURL.replace('http://', 'https://');
+        }
+        if (config.url && config.url.includes('http://')) {
+          config.url = config.url.replace('http://', 'https://');
+        }
+      }
+      // Log final URL in production for debugging
+      if (import.meta.env.PROD) {
+        const correctedUrl = (config.baseURL || '') + (config.url || '');
+        console.log('[api] Final request URL:', correctedUrl);
+      }
+    }
+    
     const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
