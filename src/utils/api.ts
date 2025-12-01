@@ -83,6 +83,16 @@ api.interceptors.request.use(
       }
     }
     
+    // CRITICAL: Ensure baseURL doesn't have trailing slash to prevent redirect issues
+    if (config.baseURL && config.baseURL.endsWith('/')) {
+      config.baseURL = config.baseURL.slice(0, -1);
+    }
+    
+    // CRITICAL: Ensure path starts with / (axios will handle joining correctly)
+    if (config.url && !config.url.startsWith('/') && !config.url.startsWith('http')) {
+      config.url = '/' + config.url;
+    }
+    
     // CRITICAL: Ensure final URL is HTTPS and log it for debugging
     const finalUrl = (config.baseURL || '') + (config.url || '');
     if (productionDomains.some(domain => finalUrl.includes(domain))) {

@@ -42,6 +42,16 @@ authApi.interceptors.request.use(
       }
     }
     
+    // CRITICAL: Ensure baseURL doesn't have trailing slash to prevent redirect issues
+    if (config.baseURL && config.baseURL.endsWith('/')) {
+      config.baseURL = config.baseURL.slice(0, -1);
+    }
+    
+    // CRITICAL: Ensure path starts with / (axios will handle joining correctly)
+    if (config.url && !config.url.startsWith('/') && !config.url.startsWith('http')) {
+      config.url = '/' + config.url;
+    }
+    
     // Log final URL for debugging (only in production)
     if (import.meta.env.PROD) {
       const finalUrl = (config.baseURL || '') + (config.url || '');

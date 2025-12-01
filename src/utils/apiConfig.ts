@@ -72,6 +72,10 @@ export const getApiBaseUrl = (): string => {
     }
   }
   
+  // CRITICAL: Remove trailing slash to prevent redirect issues
+  // Axios will handle path joining correctly
+  finalUrl = finalUrl.replace(/\/+$/, '');
+  
   // Log final URL for debugging
   if (import.meta.env.PROD || import.meta.env.DEV) {
     console.log('[apiConfig] Final API Base URL:', finalUrl);
@@ -87,6 +91,10 @@ export const getApiBaseUrl = (): string => {
 export const getAuthBaseUrl = (): string => {
   const apiUrl = getApiBaseUrl();
   let authUrl = apiUrl.replace('/api', '') || 'http://localhost:5000';
+  
+  // CRITICAL: Remove trailing slash to prevent redirect issues
+  // Axios will handle path joining correctly
+  authUrl = authUrl.replace(/\/+$/, '');
   
   // CRITICAL: Ensure HTTPS for production domains
   const productionDomains = ['.railway.app', '.vercel.app', '.render.com', '.fly.dev', '.herokuapp.com'];
