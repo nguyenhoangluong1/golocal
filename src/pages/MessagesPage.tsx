@@ -157,9 +157,9 @@ export default function MessagesPage() {
   // Reduces unnecessary re-renders and improves UX
 
   // State variables for auto-scroll and polling optimization
-  const [isNearBottom, setIsNearBottom] = useState(true);
-  const [lastMessageId, setLastMessageId] = useState<string | null>(null);
-  const [isUserScrolling, setIsUserScrolling] = useState(false);
+  const [, setIsNearBottom] = useState(true);
+  const [, setLastMessageId] = useState<string | null>(null);
+  const [, setIsUserScrolling] = useState(false);
 
   // Auto-scroll disabled - user wants to keep scroll position
   // useEffect(() => {
@@ -234,8 +234,8 @@ export default function MessagesPage() {
       const convs = response.data || [];
       
       // Filter out duplicates by conversation ID
-      const uniqueConvs = convs.filter((conv, index, self) => 
-        index === self.findIndex(c => c.id === conv.id)
+      const uniqueConvs = convs.filter((conv: Conversation, index: number, self: Conversation[]) => 
+        index === self.findIndex((c: Conversation) => c.id === conv.id)
       );
       
       setConversations(uniqueConvs);
@@ -665,11 +665,11 @@ export default function MessagesPage() {
                         </p>
                       </div>
                     ) : selectedConversation && messages.length > 0 ? (
-                      messages.map((message) => {
-                        const isOwn = message.sender_id === user.id;
+                      messages.map((m: Message) => {
+                        const isOwn = m.sender_id === user.id;
                         return (
                           <div
-                            key={message.id}
+                            key={m.id}
                             className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
                           >
                             <div
@@ -680,14 +680,14 @@ export default function MessagesPage() {
                               }`}
                             >
                               <p className="text-sm whitespace-pre-wrap break-words">
-                                {message.content}
+                                {m.content}
                               </p>
                               <p
                                 className={`text-xs mt-1 ${
                                   isOwn ? 'text-rose-100' : 'text-gray-500 dark:text-gray-400'
                                 }`}
                               >
-                                {formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}
+                                {formatDistanceToNow(new Date(m.created_at), { addSuffix: true })}
                               </p>
                             </div>
                           </div>

@@ -5,7 +5,7 @@ import axios from 'axios';
 // Auth endpoints are at root level (no /api prefix)
 const AUTH_BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
-interface User {
+export interface User {
   id: string;
   email: string;
   name: string;

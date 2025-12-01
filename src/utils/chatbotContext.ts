@@ -105,7 +105,7 @@ export function buildChatbotContext(
   if (pathname.startsWith('/vehicle/')) {
     context.viewing = {
       type: 'vehicle',
-      id: params.id,
+      id: params.id as string | undefined,
       name: additionalData?.viewingVehicle?.name,
       city: additionalData?.viewingVehicle?.location,
       price: additionalData?.viewingVehicle?.pricePerDay,
@@ -114,7 +114,7 @@ export function buildChatbotContext(
   } else if (pathname.startsWith('/place/')) {
     context.viewing = {
       type: 'place',
-      id: params.id,
+      id: params.id as string | undefined,
       name: additionalData?.viewingPlace?.name,
       city: additionalData?.viewingPlace?.city,
     };

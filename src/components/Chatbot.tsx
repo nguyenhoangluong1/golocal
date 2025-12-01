@@ -4,7 +4,7 @@ import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
 import { chatbotAPI } from '../utils/api';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
-import { buildChatbotContext, formatContextForAPI, type ChatbotContext } from '../utils/chatbotContext';
+import { buildChatbotContext, formatContextForAPI } from '../utils/chatbotContext';
 import claudeLogo from '../assets/img/claude_logo.png';
 
 interface Message {

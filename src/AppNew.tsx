@@ -47,20 +47,6 @@ const PageLoader = () => (
   </div>
 );
 
-type PlaceholderProps = {
-  title: string;
-  description?: string;
-};
-
-const PlaceholderPage = ({ title, description }: PlaceholderProps) => (
-  <div className="px-8 py-24 bg-white dark:bg-gray-900 transition-colors min-h-screen">
-    <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors">{title}</h1>
-    <p className="mt-4 text-gray-500 dark:text-gray-400 text-lg transition-colors">
-      {description ?? 'This page is currently under construction.'}
-    </p>
-  </div>
-);
-
 const CartPage = lazy(() => import('./pages/CartPage'));
 
 

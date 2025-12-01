@@ -34,7 +34,7 @@ const CART_STORAGE_KEY = 'golocal_cart';
 
 export default function CartPage() {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { showError, showWarning, showSuccess } = useToast();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -259,7 +259,7 @@ export default function CartPage() {
         <div className="grid lg:grid-cols-[1fr_400px] gap-12">
           {/* Left: Cart Items */}
           <div className="space-y-6">
-            {cartItems.map((item, index) => {
+            {cartItems.map((item) => {
               if (!item.vehicle) return null;
               
               const days = differenceInDays(parseISO(item.endDate), parseISO(item.startDate)) + 1;
