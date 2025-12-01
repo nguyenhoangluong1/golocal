@@ -12,7 +12,8 @@ import { bookingsAPI, paymentsAPI, messagesAPI } from '../utils/api';
 import { useFavorites } from '../hooks/useFavorites';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import { getApiBaseUrl } from '../utils/apiConfig';
+const API_URL = getApiBaseUrl();
 
 interface Vehicle {
   id: string;

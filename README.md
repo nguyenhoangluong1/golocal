@@ -47,7 +47,10 @@ VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 # API Backend
+# Local development:
 VITE_API_URL=http://localhost:5000/api
+# Production (Railway):
+# VITE_API_URL=https://your-project.up.railway.app/api
 
 # Google OAuth (nếu sử dụng)
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
@@ -56,10 +59,9 @@ VITE_GOOGLE_CLIENT_ID=your_google_client_id
 VITE_FACEBOOK_APP_ID=your_facebook_app_id
 ```
 
-2. Cập nhật `VITE_API_URL` cho production:
-```env
-VITE_API_URL=https://your-backend-api.com/api
-```
+2. **Cho Production (Vercel):**
+   - Set `VITE_API_URL` trong Vercel Dashboard → Settings → Environment Variables
+   - Value: `https://your-project.up.railway.app/api`
 
 ## 🚀 Running
 

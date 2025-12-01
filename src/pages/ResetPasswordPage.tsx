@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { getAuthBaseUrl } from '../utils/apiConfig';
 
-const VITE_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-const AUTH_BASE_URL = VITE_API_URL.replace('/api', ''); // Remove /api for auth endpoints
+const AUTH_BASE_URL = getAuthBaseUrl();
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();

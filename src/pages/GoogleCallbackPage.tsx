@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import { getAuthBaseUrl } from '../utils/apiConfig';
 
-const VITE_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-const AUTH_BASE_URL = VITE_API_URL.replace('/api', ''); // Remove /api for auth endpoints
+const AUTH_BASE_URL = getAuthBaseUrl();
 
 export default function GoogleCallbackPage() {
   const [searchParams] = useSearchParams();

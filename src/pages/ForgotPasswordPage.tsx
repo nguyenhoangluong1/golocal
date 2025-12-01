@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import axios from 'axios';
+import { getAuthBaseUrl } from '../utils/apiConfig';
 
-const VITE_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-const AUTH_BASE_URL = VITE_API_URL.replace('/api', ''); // Remove /api for auth endpoints
+const AUTH_BASE_URL = getAuthBaseUrl();
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');

@@ -11,7 +11,8 @@ import { vehiclesAPI, reviewsAPI } from '../utils/api';
 import { bookingsAPI, paymentsAPI, favoritesAPI } from '../utils/api';
 import { useFavorites } from '../hooks/useFavorites';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import { getApiBaseUrl } from '../utils/apiConfig';
+const API_URL = getApiBaseUrl();
 
 interface Booking {
   id: string;

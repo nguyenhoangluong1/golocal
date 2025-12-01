@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { apiCache } from './apiCache';
 import { requestDeduplication } from './requestDeduplication';
+import { getApiBaseUrl, getAuthBaseUrl } from './apiConfig';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = getApiBaseUrl();
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -285,7 +286,7 @@ export const imagesAPI = {
 };
 
 // Admin API (hidden endpoint)
-const ADMIN_BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+const ADMIN_BASE_URL = getAuthBaseUrl();
 const ADMIN_PREFIX = '/internal/control';
 
 // Create admin API instance with auth headers

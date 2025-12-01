@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import axios from 'axios';
+import { getAuthBaseUrl } from '../utils/apiConfig';
 
 // Auth endpoints are at root level (no /api prefix)
-const AUTH_BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+const AUTH_BASE_URL = getAuthBaseUrl();
 
 export interface User {
   id: string;
