@@ -185,12 +185,26 @@ export default function Chatbot() {
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
+      
+      // Provide more specific error messages
+      let errorContent = '😅 Sorry, I encountered an issue. Please try asking again!';
+      
+      if (error.response?.status === 404) {
+        errorContent = '⚠️ Chatbot service is currently unavailable. Please try again later or contact support.';
+      } else if (error.response?.status === 500) {
+        errorContent = '😅 The chatbot service encountered an error. Please try again in a moment.';
+      } else if (error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+        errorContent = '🌐 Network error. Please check your connection and try again.';
+      } else if (error.response?.data?.detail) {
+        errorContent = `⚠️ ${error.response.data.detail}`;
+      }
+      
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: '😅 Sorry, I encountered an issue. Please try asking again!',
+        content: errorContent,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);

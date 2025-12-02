@@ -293,7 +293,7 @@ export const bookingsAPI = {
 // Chatbot API (Updated for backend v2)
 export const chatbotAPI = {
   chat: (message: string, context?: any) => 
-    api.post('/chatbot', { message, context }),
+    api.post('/chatbot/', { message, context }), // Add trailing slash to match backend route
   clearConversation: () => 
     api.post('/chatbot/clear'),
   health: () => api.get('/chatbot/health'),
