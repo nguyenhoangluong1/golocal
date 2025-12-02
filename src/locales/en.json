@@ -103,6 +103,92 @@
       "verifyUserInformation": "Verify user information",
       "approveOrReject": "Approve or reject applications"
     }
+  },
+  "home": {
+    "availableVehicles": "Available Vehicles",
+    "destinations": "Destinations",
+    "tripsCompleted": "Trips Completed",
+    "averageRating": "Average Rating",
+    "exploreCoastalRoads": "Explore Coastal Roads",
+    "exploreCoastalRoadsDesc": "Discover breathtaking ocean views and hidden beaches along Vietnam's stunning coastline",
+    "mountainAdventures": "Mountain Adventures",
+    "mountainAdventuresDesc": "Navigate winding mountain passes and experience the beauty of highland landscapes",
+    "cityExploration": "City Exploration",
+    "cityExplorationDesc": "Navigate through vibrant streets and discover local culture at your own pace",
+    "featuredVehicles": "Featured Vehicles",
+    "featuredDestinations": "Featured Destinations"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "emptyDesc": "Start exploring vehicles and add them to your cart",
+    "removeItem": "Remove Item",
+    "itemRemoved": "Item removed from cart",
+    "subtotal": "Subtotal",
+    "days": "days",
+    "serviceFee": "Service fee",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "processing": "Processing...",
+    "pleaseLogin": "Please login to continue",
+    "vehicleInfoMissing": "Vehicle information is missing",
+    "failedToLoad": "Failed to load cart items",
+    "bookingCreated": "Booking created successfully",
+    "paymentRedirect": "Redirecting to payment..."
+  },
+  "payment": {
+    "title": "Payment",
+    "loadingPaymentInfo": "Loading payment information...",
+    "paymentSuccessful": "Payment Successful! 🎉",
+    "paymentProcessed": "Your payment of {amount} has been processed successfully.",
+    "bookingConfirmed": "Your booking is now confirmed. You will receive a confirmation email shortly.",
+    "paymentFailed": "Payment Failed",
+    "selectPaymentMethod": "Select Payment Method",
+    "cardPayment": "Card Payment",
+    "bankTransfer": "Bank Transfer",
+    "cardNumber": "Card Number",
+    "cardNumberPlaceholder": "1234 5678 9012 3456",
+    "expiryDate": "Expiry Date",
+    "expiryDatePlaceholder": "MM/YY",
+    "cvc": "CVC",
+    "cvcPlaceholder": "123",
+    "cardholderName": "Cardholder Name",
+    "cardholderNamePlaceholder": "John Doe",
+    "processingPayment": "Processing Payment...",
+    "pay": "Pay",
+    "invalidCardNumber": "Please enter a valid card number",
+    "invalidExpiry": "Please enter a valid expiry date (MM/YY)",
+    "invalidCvc": "Please enter a valid CVC",
+    "enterCardholderName": "Please enter cardholder name",
+    "paymentFailedTryAgain": "Payment failed. Please try again.",
+    "errorOccurred": "An error occurred during payment. Please try again.",
+    "invalidPayment": "Invalid Payment",
+    "invalidPaymentInfo": "Invalid payment information. Please try again."
+  },
+  "search": {
+    "noResults": "No vehicles found",
+    "noResultsDesc": "Try adjusting your search filters",
+    "loading": "Loading vehicles...",
+    "page": "Page",
+    "of": "of",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "booking": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "optionalMessage": "Optional Message to Customer",
+    "welcomeMessage": "Send a welcome message to the customer...",
+    "rejectionMessage": "Send a message explaining the rejection...",
+    "processing": "Processing...",
+    "confirm": "Confirm",
+    "rejectionReason": "Rejection reason:"
+  },
+  "vehicle": {
+    "owner": "Owner",
+    "unknown": "Unknown",
+    "perDay": "per day",
+    "viewDetails": "View Details"
   }
 }
 

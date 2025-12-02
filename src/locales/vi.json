@@ -103,6 +103,92 @@
       "verifyUserInformation": "Xác minh thông tin người dùng",
       "approveOrReject": "Phê duyệt hoặc từ chối đơn đăng ký"
     }
+  },
+  "home": {
+    "availableVehicles": "Phương tiện có sẵn",
+    "destinations": "Điểm đến",
+    "tripsCompleted": "Chuyến đi đã hoàn thành",
+    "averageRating": "Đánh giá trung bình",
+    "exploreCoastalRoads": "Khám phá đường ven biển",
+    "exploreCoastalRoadsDesc": "Khám phá cảnh đại dương ngoạn mục và những bãi biển ẩn dọc theo bờ biển tuyệt đẹp của Việt Nam",
+    "mountainAdventures": "Phiêu lưu núi non",
+    "mountainAdventuresDesc": "Điều hướng các đèo núi quanh co và trải nghiệm vẻ đẹp của cảnh quan cao nguyên",
+    "cityExploration": "Khám phá thành phố",
+    "cityExplorationDesc": "Điều hướng qua các con phố sôi động và khám phá văn hóa địa phương theo tốc độ của riêng bạn",
+    "featuredVehicles": "Phương tiện nổi bật",
+    "featuredDestinations": "Điểm đến nổi bật"
+  },
+  "cart": {
+    "title": "Giỏ hàng",
+    "empty": "Giỏ hàng của bạn trống",
+    "emptyDesc": "Bắt đầu khám phá phương tiện và thêm chúng vào giỏ hàng",
+    "removeItem": "Xóa mục",
+    "itemRemoved": "Đã xóa mục khỏi giỏ hàng",
+    "subtotal": "Tạm tính",
+    "days": "ngày",
+    "serviceFee": "Phí dịch vụ",
+    "total": "Tổng cộng",
+    "checkout": "Thanh toán",
+    "processing": "Đang xử lý...",
+    "pleaseLogin": "Vui lòng đăng nhập để tiếp tục",
+    "vehicleInfoMissing": "Thông tin phương tiện bị thiếu",
+    "failedToLoad": "Không thể tải các mục trong giỏ hàng",
+    "bookingCreated": "Đã tạo đặt chỗ thành công",
+    "paymentRedirect": "Đang chuyển hướng đến thanh toán..."
+  },
+  "payment": {
+    "title": "Thanh toán",
+    "loadingPaymentInfo": "Đang tải thông tin thanh toán...",
+    "paymentSuccessful": "Thanh toán thành công! 🎉",
+    "paymentProcessed": "Thanh toán của bạn {amount} đã được xử lý thành công.",
+    "bookingConfirmed": "Đặt chỗ của bạn đã được xác nhận. Bạn sẽ nhận được email xác nhận trong thời gian ngắn.",
+    "paymentFailed": "Thanh toán thất bại",
+    "selectPaymentMethod": "Chọn phương thức thanh toán",
+    "cardPayment": "Thanh toán bằng thẻ",
+    "bankTransfer": "Chuyển khoản ngân hàng",
+    "cardNumber": "Số thẻ",
+    "cardNumberPlaceholder": "1234 5678 9012 3456",
+    "expiryDate": "Ngày hết hạn",
+    "expiryDatePlaceholder": "MM/YY",
+    "cvc": "CVC",
+    "cvcPlaceholder": "123",
+    "cardholderName": "Tên chủ thẻ",
+    "cardholderNamePlaceholder": "Nguyễn Văn A",
+    "processingPayment": "Đang xử lý thanh toán...",
+    "pay": "Thanh toán",
+    "invalidCardNumber": "Vui lòng nhập số thẻ hợp lệ",
+    "invalidExpiry": "Vui lòng nhập ngày hết hạn hợp lệ (MM/YY)",
+    "invalidCvc": "Vui lòng nhập CVC hợp lệ",
+    "enterCardholderName": "Vui lòng nhập tên chủ thẻ",
+    "paymentFailedTryAgain": "Thanh toán thất bại. Vui lòng thử lại.",
+    "errorOccurred": "Đã xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại.",
+    "invalidPayment": "Thanh toán không hợp lệ",
+    "invalidPaymentInfo": "Thông tin thanh toán không hợp lệ. Vui lòng thử lại."
+  },
+  "search": {
+    "noResults": "Không tìm thấy phương tiện",
+    "noResultsDesc": "Thử điều chỉnh bộ lọc tìm kiếm của bạn",
+    "loading": "Đang tải phương tiện...",
+    "page": "Trang",
+    "of": "của",
+    "previous": "Trước",
+    "next": "Tiếp theo"
+  },
+  "booking": {
+    "approve": "Phê duyệt",
+    "reject": "Từ chối",
+    "optionalMessage": "Tin nhắn tùy chọn cho khách hàng",
+    "welcomeMessage": "Gửi tin nhắn chào mừng đến khách hàng...",
+    "rejectionMessage": "Gửi tin nhắn giải thích lý do từ chối...",
+    "processing": "Đang xử lý...",
+    "confirm": "Xác nhận",
+    "rejectionReason": "Lý do từ chối:"
+  },
+  "vehicle": {
+    "owner": "Chủ sở hữu",
+    "unknown": "Không xác định",
+    "perDay": "mỗi ngày",
+    "viewDetails": "Xem chi tiết"
   }
 }
 

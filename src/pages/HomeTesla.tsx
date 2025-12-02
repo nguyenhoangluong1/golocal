@@ -8,35 +8,11 @@ import PlaceCardSkeleton from '../components/PlaceCardSkeleton';
 import Slideshow from '../components/Slideshow';
 import { vehiclesAPI, placesAPI } from '../utils/api';
 import { useCountUp } from '../hooks/useCountUp';
+import { useI18n } from '../contexts/I18nContext';
 import heroImage from '../assets/img/thumbnail2.webp';
 import thumbnail1 from '../assets/img/thumbnail1.webp';
 import thumbnail2 from '../assets/img/thumbnail2.webp';
 import thumbnail3 from '../assets/img/thumbnail3.webp';
-
-const STATS = [
-  { value: 1000, label: 'Available Vehicles', hasPlus: true },
-  { value: 500, label: 'Destinations', hasPlus: true },
-  { value: 5000, label: 'Trips Completed', hasPlus: true },
-  { value: 4.9, label: 'Average Rating', decimals: 1 },
-];
-
-const SLIDESHOW_SLIDES = [
-  {
-    image: thumbnail1,
-    title: 'Explore Coastal Roads',
-    subtitle: 'Discover breathtaking ocean views and hidden beaches along Vietnam\'s stunning coastline',
-  },
-  {
-    image: thumbnail2,
-    title: 'Mountain Adventures',
-    subtitle: 'Navigate winding mountain passes and experience the beauty of highland landscapes',
-  },
-  {
-    image: thumbnail3,
-    title: 'City Exploration',
-    subtitle: 'Navigate through vibrant streets and discover local culture at your own pace',
-  },
-];
 
 // StatItem component with count-up animation
 function StatItem({ value, label, hasPlus, decimals, duration }: {
@@ -70,10 +46,36 @@ function StatItem({ value, label, hasPlus, decimals, duration }: {
 
 export default function HomeTesla() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [featuredVehicles, setFeaturedVehicles] = useState<any[]>([]);
   const [featuredDestinations, setFeaturedDestinations] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [placesLoading, setPlacesLoading] = useState(false);
+
+  const STATS = [
+    { value: 1000, label: t('home.availableVehicles'), hasPlus: true },
+    { value: 500, label: t('home.destinations'), hasPlus: true },
+    { value: 5000, label: t('home.tripsCompleted'), hasPlus: true },
+    { value: 4.9, label: t('home.averageRating'), decimals: 1 },
+  ];
+
+  const SLIDESHOW_SLIDES = [
+    {
+      image: thumbnail1,
+      title: t('home.exploreCoastalRoads'),
+      subtitle: t('home.exploreCoastalRoadsDesc'),
+    },
+    {
+      image: thumbnail2,
+      title: t('home.mountainAdventures'),
+      subtitle: t('home.mountainAdventuresDesc'),
+    },
+    {
+      image: thumbnail3,
+      title: t('home.cityExploration'),
+      subtitle: t('home.cityExplorationDesc'),
+    },
+  ];
 
   // ALGORITHM OPTIMIZATION: Batch both requests in single useEffect
   // This reduces duplicate calls and improves loading performance
@@ -205,7 +207,7 @@ export default function HomeTesla() {
         <div className="w-full px-6 lg:px-12 xl:px-20">
           <div className="text-center mb-16 md:mb-24 max-w-[1920px] mx-auto">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight transition-colors">
-              Popular Destinations
+              {t('home.featuredDestinations')}
             </h2>
             <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 font-light transition-colors">
               Explore Vietnam's most breathtaking check-in spots
@@ -277,7 +279,7 @@ export default function HomeTesla() {
 
                   {/* Explore Link */}
                   <div className="flex items-center text-sm font-medium text-gray-900 dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
-                    Explore vehicles
+                    {t('vehicle.viewDetails')}
                     <svg className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -294,7 +296,7 @@ export default function HomeTesla() {
               onClick={() => navigate('/places')}
               className="px-12 py-4 text-sm font-medium tracking-widest text-white bg-gray-900 dark:bg-gray-100 dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-all rounded-xl shadow-lg hover:shadow-2xl"
             >
-              FIND SUITABLE VEHICLES
+              {t('navbar.findCars')}
             </button>
           </div>
         </div>
@@ -305,7 +307,7 @@ export default function HomeTesla() {
         <div className="w-full px-6 lg:px-12 xl:px-20">
           <div className="text-center mb-16 md:mb-24 max-w-[1920px] mx-auto">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight transition-colors">
-              Featured Vehicles
+              {t('home.featuredVehicles')}
             </h2>
             <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 font-light transition-colors">
               Top-rated by the GoLocal community

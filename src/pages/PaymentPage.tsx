@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useI18n } from '../contexts/I18nContext';
 import { paymentsAPI } from '../utils/api';
 import { CheckCircle, XCircle, Loader2, ArrowLeft, CreditCard, ChevronDown, Building2 } from 'lucide-react';
 import { useDialog } from '../hooks/useDialog';
@@ -27,6 +28,7 @@ export default function PaymentPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated } = useAuth();
+  const { t } = useI18n();
   const { showAlert, DialogComponents } = useDialog();
   const [paymentState, setPaymentState] = useState<PaymentState | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -64,7 +66,7 @@ export default function PaymentPage() {
     // Get payment state from navigation
     const state = location.state as PaymentState;
     if (!state || !state.paymentIntentId || !state.clientSecret) {
-      showAlert('Invalid Payment', 'Invalid payment information. Please try again.', 'error');
+      showAlert(t('payment.invalidPayment'), t('payment.invalidPaymentInfo'), 'error');
       navigate('/');
       return;
     }
@@ -113,12 +115,12 @@ export default function PaymentPage() {
         // Don't auto-redirect, let user stay on success page
       } else {
         setPaymentStatus('failed');
-        setError('Payment failed. Please try again.');
+        setError(t('payment.paymentFailedTryAgain'));
       }
     } catch (error: any) {
       console.error('Payment error:', error);
       setPaymentStatus('failed');
-      setError(error.response?.data?.detail || 'An error occurred during payment. Please try again.');
+        setError(error.response?.data?.detail || t('payment.errorOccurred'));
     } finally {
       setProcessing(false);
     }
@@ -145,7 +147,7 @@ export default function PaymentPage() {
             className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>Back</span>
+            <span>{t('common.back')}</span>
           </button>
           
           {/* Stripe Logo & Branding */}
@@ -215,7 +217,7 @@ export default function PaymentPage() {
                 <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400 flex-shrink-0 mt-1" />
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-green-800 dark:text-green-400 mb-2">
-                    Payment Successful! 🎉
+                    {t('payment.paymentSuccessful')}
                   </h3>
                   <p className="text-sm text-green-700 dark:text-green-500 mb-4">
                     Your payment of <strong>₫{paymentDetails.amount.toLocaleString('vi-VN')}</strong> has been processed successfully.
@@ -233,7 +235,7 @@ export default function PaymentPage() {
               <XCircle className="w-6 h-6 text-red-600 dark:text-red-400 flex-shrink-0" />
               <div className="flex-1">
                 <p className="font-semibold text-red-800 dark:text-red-400">
-                  Payment Failed
+                  {t('payment.paymentFailed')}
                 </p>
                 {error && (
                   <p className="text-sm text-red-700 dark:text-red-500 mt-1">{error}</p>
@@ -249,7 +251,7 @@ export default function PaymentPage() {
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
                   <div className="w-2 h-2 bg-[#635BFF] rounded-full"></div>
-                  Payment Method
+                  {t('payment.selectPaymentMethod')}
                 </label>
                 <div className="grid grid-cols-2 gap-4">
                   <button
@@ -563,12 +565,12 @@ export default function PaymentPage() {
                   {processing ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Processing Payment...</span>
+                      <span>{t('payment.processingPayment')}</span>
                     </>
                   ) : (
                     <>
                       <CreditCard className="w-5 h-5" />
-                      <span>Pay ₫{paymentState.amount.toLocaleString('vi-VN')}</span>
+                      <span>{t('payment.pay')} ₫{paymentState.amount.toLocaleString('vi-VN')}</span>
                     </>
                   )}
                 </button>

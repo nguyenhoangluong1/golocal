@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import { useI18n } from '../contexts/I18nContext';
 import { vehiclesAPI, bookingsAPI, paymentsAPI } from '../utils/api';
 import { 
   Calendar, MapPin, Car, Trash2, ArrowRight, Clock, 
@@ -36,6 +37,7 @@ export default function CartPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { showError, showWarning, showSuccess } = useToast();
+  const { t } = useI18n();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState<string | null>(null);
@@ -89,7 +91,7 @@ export default function CartPage() {
       }
     } catch (error) {
       console.error('Failed to load cart:', error);
-      showError('Failed to load cart items');
+      showError(t('cart.failedToLoad'));
     } finally {
       setLoading(false);
     }
@@ -123,7 +125,7 @@ export default function CartPage() {
       localStorage.removeItem(CART_STORAGE_KEY);
     }
     
-    showSuccess('Item removed from cart');
+    showSuccess(t('cart.itemRemoved'));
   };
 
   const handleCheckout = async (item: CartItem) => {
@@ -134,7 +136,7 @@ export default function CartPage() {
     }
 
     if (!item.vehicle) {
-      showError('Vehicle information is missing');
+      showError(t('cart.vehicleInfoMissing'));
       return;
     }
 
@@ -195,7 +197,7 @@ export default function CartPage() {
     }
 
     if (cartItems.length === 0) {
-      showWarning('Your cart is empty');
+      showWarning(t('cart.empty'));
       return;
     }
 
@@ -225,10 +227,10 @@ export default function CartPage() {
               <Car className="w-12 h-12 text-gray-400" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight transition-colors">
-              Your cart is empty
+              {t('cart.empty')}
             </h1>
             <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 font-light mb-12 transition-colors">
-              Start planning your trip by adding vehicles to your cart
+              {t('cart.emptyDesc')}
             </p>
             <button
               onClick={() => navigate('/search')}
@@ -365,19 +367,19 @@ export default function CartPage() {
                   <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mb-6">
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Subtotal ({days} days)</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('cart.subtotal')} ({days} {t('cart.days')})</span>
                         <span className="text-gray-900 dark:text-white font-semibold">
                           ₫{itemSubtotal.toLocaleString('vi-VN')}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Service fee</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('cart.serviceFee')}</span>
                         <span className="text-gray-900 dark:text-white font-semibold">
                           ₫{itemFee.toLocaleString('vi-VN')}
                         </span>
                       </div>
                       <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200 dark:border-gray-700">
-                        <span className="text-gray-900 dark:text-white">Total</span>
+                        <span className="text-gray-900 dark:text-white">{t('cart.total')}</span>
                         <span className="text-gray-900 dark:text-white">
                           ₫{itemTotal.toLocaleString('vi-VN')}
                         </span>
@@ -394,11 +396,11 @@ export default function CartPage() {
                     {processing === item.vehicleId ? (
                       <>
                         <div className="w-5 h-5 border-2 border-white dark:border-gray-900 border-t-transparent rounded-full animate-spin"></div>
-                        Processing...
+                        {t('cart.processing')}
                       </>
                     ) : (
                       <>
-                        Proceed to Payment
+                        {t('cart.checkout')}
                         <ArrowRight className="w-5 h-5" />
                       </>
                     )}

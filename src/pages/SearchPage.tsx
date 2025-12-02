@@ -9,10 +9,12 @@ import type { SearchParams } from '../components/SearchBar';
 import { getCityCoordinates } from '../utils/locationData';
 import { vehiclesAPI } from '../utils/api';
 import { useFavorites } from '../hooks/useFavorites';
+import { useI18n } from '../contexts/I18nContext';
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalVehicles, setTotalVehicles] = useState(0);
@@ -271,7 +273,7 @@ export default function SearchPage() {
                 <div className="text-center py-20">
                   <div className="max-w-md mx-auto bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl p-12 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl">
                     <p className="text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
-                      No vehicles found
+                      {t('search.noResults')}
                     </p>
                     <p className="text-gray-500 dark:text-gray-400 mb-8 transition-colors">
                       Try adjusting your filters or search in a different location
