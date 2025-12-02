@@ -37,6 +37,15 @@ export default function AdminBookingsPage() {
   const [total, setTotal] = useState(0);
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
 
+  // Sync filter with URL params on mount
+  useEffect(() => {
+    const statusParam = searchParams.get('status');
+    if (statusParam && statusParam !== statusFilter) {
+      // Handle comma-separated statuses
+      setStatusFilter(statusParam);
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     if (user && user.role !== 'admin') {
       navigate('/');
@@ -51,7 +60,14 @@ export default function AdminBookingsPage() {
     try {
       setLoading(true);
       const params: any = { page, limit: 20 };
-      if (statusFilter) params.status = statusFilter;
+      if (statusFilter) {
+        // Handle comma-separated statuses (e.g., "PENDING,CONFIRMED")
+        if (statusFilter.includes(',')) {
+          params.status = statusFilter.split(',').map((s: string) => s.trim());
+        } else {
+          params.status = statusFilter;
+        }
+      }
 
       const response = await adminAPI.getBookings(params);
       setBookings(response.data.data || []);

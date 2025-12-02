@@ -30,6 +30,18 @@ export default function AdminUsersPage() {
   const [roleFilter, setRoleFilter] = useState(searchParams.get('role') || '');
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
 
+  // Sync filters with URL params on mount
+  useEffect(() => {
+    const statusParam = searchParams.get('status');
+    const roleParam = searchParams.get('role');
+    if (statusParam && statusParam !== statusFilter) {
+      setStatusFilter(statusParam);
+    }
+    if (roleParam && roleParam !== roleFilter) {
+      setRoleFilter(roleParam);
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     if (user && user.role !== 'admin') {
       navigate('/');

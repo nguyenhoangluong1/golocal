@@ -38,6 +38,14 @@ export default function AdminVehiclesPage() {
   const [alertDialog, setAlertDialog] = useState<{ isOpen: boolean; title: string; message: string; type?: 'success' | 'error' | 'warning' | 'info' } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Sync filter with URL params on mount
+  useEffect(() => {
+    const verificationParam = searchParams.get('verification_status');
+    if (verificationParam && verificationParam !== verificationFilter) {
+      setVerificationFilter(verificationParam);
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     if (user && user.role !== 'admin') {
       navigate('/');

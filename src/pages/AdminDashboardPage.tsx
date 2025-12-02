@@ -149,7 +149,7 @@ export default function AdminDashboardPage() {
       value: `₫${(stats?.total_revenue || 0).toLocaleString('vi-VN')}`,
       icon: DollarSign,
       color: 'emerald',
-      link: '/admin/payments',
+      link: '/admin/bookings',
       details: {
         commission: stats?.total_commission || 0,
         netRevenue: (stats?.total_revenue || 0) - (stats?.total_commission || 0),
