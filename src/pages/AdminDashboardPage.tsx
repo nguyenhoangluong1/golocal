@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { adminAPI } from '../utils/api';
 import { Users, Car, Calendar, TrendingUp, DollarSign, AlertCircle, CheckCircle, Clock, FileText, Wallet, CreditCard, ChevronDown, ChevronUp, Eye, Edit, ArrowRight, BarChart3, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '../contexts/I18nContext';
 
 interface AdminStats {
   total_users: number;
@@ -23,6 +24,7 @@ interface AdminStats {
 export default function AdminDashboardPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
@@ -61,7 +63,7 @@ export default function AdminDashboardPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading dashboard...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -69,7 +71,7 @@ export default function AdminDashboardPage() {
 
   const statCards = [
     {
-      title: 'Total Users',
+      title: t('admin.dashboard.totalUsers'),
       value: stats?.total_users || 0,
       icon: Users,
       color: 'blue',
@@ -79,10 +81,10 @@ export default function AdminDashboardPage() {
         inactive: (stats?.total_users || 0) - (stats?.active_users || 0),
         growth: stats?.users_growth || 0,
       },
-      description: 'Tổng số người dùng đã đăng ký trên nền tảng',
+      description: t('admin.dashboard.totalUsersDesc'),
     },
     {
-      title: 'Active Users',
+      title: t('admin.dashboard.activeUsers'),
       value: stats?.active_users || 0,
       icon: CheckCircle,
       color: 'green',
@@ -91,10 +93,10 @@ export default function AdminDashboardPage() {
         percentage: stats?.total_users ? Math.round((stats.active_users / stats.total_users) * 100) : 0,
         growth: stats?.users_growth || 0,
       },
-      description: 'Số người dùng đang hoạt động trong hệ thống',
+      description: t('admin.dashboard.activeUsersDesc'),
     },
     {
-      title: 'Total Vehicles',
+      title: t('admin.dashboard.totalVehicles'),
       value: stats?.total_vehicles || 0,
       icon: Car,
       color: 'purple',
@@ -103,10 +105,10 @@ export default function AdminDashboardPage() {
         verified: (stats?.total_vehicles || 0) - (stats?.pending_vehicles || 0),
         pending: stats?.pending_vehicles || 0,
       },
-      description: 'Tổng số phương tiện đã được đăng ký',
+      description: t('admin.dashboard.totalVehiclesDesc'),
     },
     {
-      title: 'Pending Vehicles',
+      title: t('admin.dashboard.pendingVehicles'),
       value: stats?.pending_vehicles || 0,
       icon: AlertCircle,
       color: 'yellow',
@@ -115,10 +117,10 @@ export default function AdminDashboardPage() {
         needsReview: stats?.pending_vehicles || 0,
         percentage: stats?.total_vehicles ? Math.round((stats.pending_vehicles / stats.total_vehicles) * 100) : 0,
       },
-      description: 'Số phương tiện đang chờ xét duyệt',
+      description: t('admin.dashboard.pendingVehiclesDesc'),
     },
     {
-      title: 'Total Bookings',
+      title: t('admin.dashboard.totalBookings'),
       value: stats?.total_bookings || 0,
       icon: Calendar,
       color: 'indigo',
@@ -128,10 +130,10 @@ export default function AdminDashboardPage() {
         completed: (stats?.total_bookings || 0) - (stats?.active_bookings || 0),
         growth: stats?.bookings_growth || 0,
       },
-      description: 'Tổng số đặt chỗ đã được tạo',
+      description: t('admin.dashboard.totalBookingsDesc'),
     },
     {
-      title: 'Active Bookings',
+      title: t('admin.dashboard.activeBookings'),
       value: stats?.active_bookings || 0,
       icon: Clock,
       color: 'orange',
@@ -140,10 +142,10 @@ export default function AdminDashboardPage() {
         pending: Math.floor((stats?.active_bookings || 0) * 0.3),
         confirmed: Math.floor((stats?.active_bookings || 0) * 0.7),
       },
-      description: 'Số đặt chỗ đang trong quá trình xử lý',
+      description: t('admin.dashboard.activeBookingsDesc'),
     },
     {
-      title: 'Total Revenue',
+      title: t('admin.dashboard.totalRevenue'),
       value: `₫${(stats?.total_revenue || 0).toLocaleString('vi-VN')}`,
       icon: DollarSign,
       color: 'emerald',
@@ -152,10 +154,10 @@ export default function AdminDashboardPage() {
         commission: stats?.total_commission || 0,
         netRevenue: (stats?.total_revenue || 0) - (stats?.total_commission || 0),
       },
-      description: 'Tổng doanh thu từ tất cả các đặt chỗ',
+      description: t('admin.dashboard.totalRevenueDesc'),
     },
     {
-      title: 'Total Commission',
+      title: t('admin.dashboard.totalCommission'),
       value: `₫${(stats?.total_commission || 0).toLocaleString('vi-VN')}`,
       icon: TrendingUp,
       color: 'rose',
@@ -164,10 +166,10 @@ export default function AdminDashboardPage() {
         percentage: 10,
         revenue: stats?.total_revenue || 0,
       },
-      description: 'Tổng hoa hồng thu được (10% doanh thu)',
+      description: t('admin.dashboard.totalCommissionDesc'),
     },
     {
-      title: 'Pending Payouts',
+      title: t('admin.dashboard.pendingPayouts'),
       value: `₫${(stats?.pending_payouts || 0).toLocaleString('vi-VN')}`,
       icon: Wallet,
       color: 'amber',
@@ -177,10 +179,10 @@ export default function AdminDashboardPage() {
         count: stats?.pending_payout_count || 0,
         average: stats?.pending_payout_count ? Math.round((stats.pending_payouts || 0) / stats.pending_payout_count) : 0,
       },
-      description: 'Số tiền đang chờ thanh toán cho chủ xe',
+      description: t('admin.dashboard.pendingPayoutsDesc'),
     },
     {
-      title: 'Released Payouts',
+      title: t('admin.dashboard.releasedPayouts'),
       value: `₫${(stats?.released_payouts || 0).toLocaleString('vi-VN')}`,
       icon: CreditCard,
       color: 'teal',
@@ -189,25 +191,25 @@ export default function AdminDashboardPage() {
         totalPaid: stats?.released_payouts || 0,
         percentage: stats?.total_revenue ? Math.round(((stats.released_payouts || 0) / stats.total_revenue) * 100) : 0,
       },
-      description: 'Tổng số tiền đã thanh toán cho chủ xe',
+      description: t('admin.dashboard.releasedPayoutsDesc'),
     },
   ];
 
   const quickActions = [
     {
       id: 'users',
-      title: 'Manage Users',
+      title: t('admin.dashboard.manageUsers'),
       icon: Users,
-      description: 'View, edit, and manage user accounts',
+      description: t('admin.dashboard.manageUsersDesc'),
       link: '/admin/users',
       content: (
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Total Users</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t('admin.dashboard.totalUsers')}</span>
             <span className="font-semibold text-gray-900 dark:text-white">{stats?.total_users || 0}</span>
           </div>
           <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Active Users</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t('admin.dashboard.activeUsers')}</span>
             <span className="font-semibold text-green-600 dark:text-green-400">{stats?.active_users || 0}</span>
           </div>
           <button
@@ -218,7 +220,7 @@ export default function AdminDashboardPage() {
             className="w-full mt-4 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
           >
             <Eye className="w-4 h-4" />
-            View All Users
+            {t('admin.dashboard.viewAllUsers')}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -226,18 +228,18 @@ export default function AdminDashboardPage() {
     },
     {
       id: 'vehicles',
-      title: 'Approve Vehicles',
+      title: t('admin.dashboard.approveVehicles'),
       icon: Car,
-      description: 'Review and verify vehicle listings',
+      description: t('admin.dashboard.approveVehiclesDesc'),
       link: '/admin/vehicles',
       content: (
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Total Vehicles</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t('admin.dashboard.totalVehicles')}</span>
             <span className="font-semibold text-gray-900 dark:text-white">{stats?.total_vehicles || 0}</span>
           </div>
           <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-            <span className="text-sm text-amber-700 dark:text-amber-400">Pending Review</span>
+            <span className="text-sm text-amber-700 dark:text-amber-400">{t('admin.dashboard.pending')}</span>
             <span className="font-semibold text-amber-600 dark:text-amber-400">{stats?.pending_vehicles || 0}</span>
           </div>
           <button
@@ -248,7 +250,7 @@ export default function AdminDashboardPage() {
             className="w-full mt-4 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
           >
             <Edit className="w-4 h-4" />
-            Review Pending
+            {t('admin.dashboard.reviewPending')}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -256,18 +258,18 @@ export default function AdminDashboardPage() {
     },
     {
       id: 'bookings',
-      title: 'Manage Bookings',
+      title: t('admin.dashboard.manageBookings'),
       icon: Calendar,
-      description: 'View and manage all bookings',
+      description: t('admin.dashboard.manageBookingsDesc'),
       link: '/admin/bookings',
       content: (
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Total Bookings</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t('admin.dashboard.totalBookings')}</span>
             <span className="font-semibold text-gray-900 dark:text-white">{stats?.total_bookings || 0}</span>
           </div>
           <div className="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
-            <span className="text-sm text-orange-700 dark:text-orange-400">Active Bookings</span>
+            <span className="text-sm text-orange-700 dark:text-orange-400">{t('admin.dashboard.activeBookings')}</span>
             <span className="font-semibold text-orange-600 dark:text-orange-400">{stats?.active_bookings || 0}</span>
           </div>
           <button
@@ -278,7 +280,7 @@ export default function AdminDashboardPage() {
             className="w-full mt-4 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
           >
             <BarChart3 className="w-4 h-4" />
-            View All Bookings
+            {t('admin.dashboard.viewAllBookings')}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -286,20 +288,20 @@ export default function AdminDashboardPage() {
     },
     {
       id: 'kyc',
-      title: 'KYC Verification',
+      title: t('admin.dashboard.kycVerification'),
       icon: FileText,
-      description: 'Review and verify user identity documents',
+      description: t('admin.dashboard.kycVerificationDesc'),
       link: '/admin/kyc',
       content: (
         <div className="space-y-3">
           <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
             <p className="text-sm text-blue-700 dark:text-blue-400 mb-2">
-              <strong>KYC Process:</strong>
+              <strong>{t('admin.dashboard.kycProcess')}:</strong>
             </p>
             <ul className="text-xs text-blue-600 dark:text-blue-400 space-y-1 list-disc list-inside">
-              <li>Review identity documents</li>
-              <li>Verify user information</li>
-              <li>Approve or reject applications</li>
+              <li>{t('admin.dashboard.reviewIdentityDocuments')}</li>
+              <li>{t('admin.dashboard.verifyUserInformation')}</li>
+              <li>{t('admin.dashboard.approveOrReject')}</li>
             </ul>
           </div>
           <button
@@ -310,7 +312,7 @@ export default function AdminDashboardPage() {
             className="w-full mt-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
           >
             <FileText className="w-4 h-4" />
-            Review Documents
+            {t('admin.dashboard.reviewDocuments')}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -318,24 +320,24 @@ export default function AdminDashboardPage() {
     },
     {
       id: 'payouts',
-      title: 'Manage Payouts',
+      title: t('admin.dashboard.managePayouts'),
       icon: Wallet,
-      description: 'Release payouts to vehicle hosts',
+      description: t('admin.dashboard.managePayoutsDesc'),
       link: '/admin/payouts',
       content: (
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-            <span className="text-sm text-amber-700 dark:text-amber-400">Pending Amount</span>
+            <span className="text-sm text-amber-700 dark:text-amber-400">{t('admin.dashboard.pendingAmount')}</span>
             <span className="font-semibold text-amber-600 dark:text-amber-400">
               ₫{(stats?.pending_payouts || 0).toLocaleString('vi-VN')}
             </span>
           </div>
           <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Pending Count</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t('admin.dashboard.pendingCount')}</span>
             <span className="font-semibold text-gray-900 dark:text-white">{stats?.pending_payout_count || 0}</span>
           </div>
           <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Released</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t('admin.dashboard.released')}</span>
             <span className="font-semibold text-teal-600 dark:text-teal-400">
               ₫{(stats?.released_payouts || 0).toLocaleString('vi-VN')}
             </span>
@@ -348,7 +350,7 @@ export default function AdminDashboardPage() {
             className="w-full mt-4 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
           >
             <Wallet className="w-4 h-4" />
-            Process Payouts
+            {t('admin.dashboard.processPayouts')}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -372,15 +374,15 @@ export default function AdminDashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                Admin Dashboard
+                {t('admin.dashboard.title')}
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Tổng quan thống kê và quản lý nền tảng
+                {t('admin.dashboard.subtitle')}
               </p>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <Activity className="w-5 h-5 text-rose-600 dark:text-rose-400" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Live</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('admin.dashboard.live')}</span>
             </div>
           </div>
         </div>
@@ -486,7 +488,7 @@ export default function AdminDashboardPage() {
                         className="w-full mt-4 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                       >
                         <Eye className="w-4 h-4" />
-                        Xem chi tiết
+                        {t('admin.dashboard.viewDetails')}
                         <ArrowRight className="w-4 h-4" />
                       </button>
                     )}
@@ -500,10 +502,10 @@ export default function AdminDashboardPage() {
         {/* Quick Actions Section */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Quick Actions
+            {t('admin.dashboard.quickActions')}
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Nhấp vào các card bên dưới để xem thông tin chi tiết và thực hiện hành động
+            {t('admin.dashboard.quickActionsDescription')}
           </p>
         </div>
 

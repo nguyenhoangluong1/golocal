@@ -3,7 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Moon, Sun, User, LogOut, Shield } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useI18n } from '../../contexts/I18nContext';
 import NotificationBell from '../common/NotificationBell';
+import LanguageSwitcher from '../common/LanguageSwitcher';
 import logoImage from '../../assets/img/golocal-logo.png';
 
 export default function Navbar() {
@@ -12,6 +14,7 @@ export default function Navbar() {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { isAuthenticated, user, logout } = useAuth();
+  const { t } = useI18n();
 
   // Check if we're on homepage to determine transparent navbar
   const isHomepage = location.pathname === '/';
@@ -82,7 +85,7 @@ export default function Navbar() {
                 ${textColor} hover:opacity-70
               `}
             >
-              FIND CARS
+              {t('navbar.findCars')}
             </Link>
             <Link 
               to="/places" 
@@ -91,7 +94,7 @@ export default function Navbar() {
                 ${textColor} hover:opacity-70
               `}
             >
-              DESTINATIONS
+              {t('navbar.destinations')}
             </Link>
             <Link 
               to="/become-owner" 
@@ -100,12 +103,15 @@ export default function Navbar() {
                 ${textColor} hover:opacity-70
               `}
             >
-              HOST YOUR VEHICLE
+              {t('navbar.hostYourVehicle')}
             </Link>
           </div>
 
           {/* Right Actions - Minimal */}
           <div className="hidden lg:flex items-center gap-6">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+
             {/* Night Mode Toggle */}
             <button
               onClick={toggleTheme}
@@ -140,7 +146,7 @@ export default function Navbar() {
                   `}
                 >
                   <User size={18} />
-                  <span>{user?.name?.split(' ')[0] || 'ACCOUNT'}</span>
+                  <span>{user?.name?.split(' ')[0] || t('navbar.account')}</span>
                 </button>
                 
                 <div className="absolute right-0 mt-6 w-52 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-100/50 dark:border-gray-700/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
@@ -149,22 +155,22 @@ export default function Navbar() {
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{user?.email}</p>
                   </div>
                   <Link to="/profile" className="block px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50/80 dark:hover:bg-gray-700/80 transition-colors">
-                    Profile
+                    {t('navbar.profile')}
                   </Link>
                   {(user?.role === 'driver' || user?.role === 'admin') && (
                     <Link to="/booking-approval" className="block px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50/80 dark:hover:bg-gray-700/80 transition-colors">
-                      Booking Requests
+                      {t('navbar.bookingRequests')}
                     </Link>
                   )}
                   <Link to="/messages" className="block px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50/80 dark:hover:bg-gray-700/80 transition-colors">
-                    Messages
+                    {t('navbar.messages')}
                   </Link>
                   {user?.role === 'admin' && (
                     <>
                       <hr className="my-2 border-gray-100/50 dark:border-gray-700/50" />
                       <Link to="/admin" className="block px-6 py-3 text-sm text-purple-700 dark:text-purple-300 hover:bg-purple-50/80 dark:hover:bg-purple-900/20 transition-colors flex items-center gap-2">
                         <Shield size={16} />
-                        Admin Dashboard
+                        {t('navbar.adminDashboard')}
                       </Link>
                     </>
                   )}
@@ -174,7 +180,7 @@ export default function Navbar() {
                     className="w-full text-left px-6 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50/80 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2 rounded-b-2xl"
                   >
                     <LogOut size={16} />
-                    Sign out
+                    {t('navbar.signOut')}
                   </button>
                 </div>
               </div>
@@ -187,7 +193,7 @@ export default function Navbar() {
                     ${textColor} hover:opacity-70
                   `}
                 >
-                  LOG IN
+                  {t('navbar.logIn')}
                 </Link>
                 <Link
                   to="/signup"
@@ -199,7 +205,7 @@ export default function Navbar() {
                     }
                   `}
                 >
-                  SIGN UP
+                  {t('navbar.signUp')}
                 </Link>
               </div>
             )}
@@ -213,7 +219,7 @@ export default function Navbar() {
             `}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? 'CLOSE' : 'MENU'}
+            {mobileMenuOpen ? t('navbar.close') : t('navbar.menu')}
           </button>
         </div>
 
@@ -221,17 +227,21 @@ export default function Navbar() {
         {mobileMenuOpen && (
           <div className="lg:hidden mt-6 pb-6 border-t border-white/20 pt-6 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl">
             <div className="flex flex-col gap-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Language:</span>
+                <LanguageSwitcher />
+              </div>
               <Link to="/search" className="text-sm font-medium tracking-wide text-gray-900 dark:text-white" onClick={() => setMobileMenuOpen(false)}>
-                FIND CARS
+                {t('navbar.findCars')}
               </Link>
               <Link to="/places" className="text-sm font-medium tracking-wide text-gray-900 dark:text-white" onClick={() => setMobileMenuOpen(false)}>
-                DESTINATIONS
+                {t('navbar.destinations')}
               </Link>
               <Link to="/become-owner" className="text-sm font-medium tracking-wide text-gray-900 dark:text-white" onClick={() => setMobileMenuOpen(false)}>
-                HOST YOUR VEHICLE
+                {t('navbar.hostYourVehicle')}
               </Link>
               <Link to="/cart" className="text-sm font-medium tracking-wide text-gray-900 dark:text-white" onClick={() => setMobileMenuOpen(false)}>
-                CART
+                {t('navbar.cart')}
               </Link>
               
               <hr className="border-gray-200/50 dark:border-gray-700/50" />
@@ -243,30 +253,30 @@ export default function Navbar() {
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{user?.email}</p>
                   </div>
                   <Link to="/profile" className="text-sm font-medium tracking-wide text-gray-900 dark:text-white" onClick={() => setMobileMenuOpen(false)}>
-                    PROFILE
+                    {t('navbar.profile').toUpperCase()}
                   </Link>
                   {(user?.role === 'driver' || user?.role === 'admin') && (
                     <Link to="/booking-approval" className="text-sm font-medium tracking-wide text-gray-900 dark:text-white" onClick={() => setMobileMenuOpen(false)}>
-                      BOOKING REQUESTS
+                      {t('navbar.bookingRequests').toUpperCase()}
                     </Link>
                   )}
                   <Link to="/messages" className="text-sm font-medium tracking-wide text-gray-900 dark:text-white" onClick={() => setMobileMenuOpen(false)}>
-                    MESSAGES
+                    {t('navbar.messages').toUpperCase()}
                   </Link>
                   <Link to="/cart" className="text-sm font-medium tracking-wide text-gray-900 dark:text-white" onClick={() => setMobileMenuOpen(false)}>
-                    MY TRIPS
+                    {t('navbar.myTrips')}
                   </Link>
                   {user?.role === 'admin' && (
                     <Link to="/admin" className="text-sm font-medium tracking-wide text-purple-600 dark:text-purple-400 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                       <Shield size={16} />
-                      ADMIN DASHBOARD
+                      {t('navbar.adminDashboard').toUpperCase()}
                     </Link>
                   )}
                   <button 
                     onClick={() => { logout(); setMobileMenuOpen(false); }}
                     className="text-sm font-medium tracking-wide text-red-600 dark:text-red-400 text-left"
                   >
-                    SIGN OUT
+                    {t('navbar.signOut').toUpperCase()}
                   </button>
                 </div>
               ) : (
@@ -276,14 +286,14 @@ export default function Navbar() {
                     className="text-sm font-medium tracking-wide text-gray-900 dark:text-white text-left"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    LOG IN
+                    {t('navbar.logIn')}
                   </Link>
                   <Link
                     to="/signup"
                     className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-6 py-3 text-sm font-medium tracking-wide hover:bg-gray-800 dark:hover:bg-gray-200 transition-all rounded-xl shadow-md hover:shadow-lg"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    SIGN UP
+                    {t('navbar.signUp')}
                   </Link>
                 </div>
               )}
