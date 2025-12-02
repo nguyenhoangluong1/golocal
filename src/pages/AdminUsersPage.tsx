@@ -4,6 +4,7 @@ import { adminAPI } from '../utils/api';
 import { Users, Search, Edit, Trash2, Filter } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDialog } from '../hooks/useDialog';
+import { useI18n } from '../contexts/I18nContext';
 
 interface User {
   id: string;
@@ -21,6 +22,7 @@ export default function AdminUsersPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useI18n();
   const { showConfirm, showAlert, DialogComponents } = useDialog();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,19 +79,19 @@ export default function AdminUsersPage() {
 
   const handleDelete = (userId: string) => {
     showConfirm(
-      'Delete User',
-      'Are you sure you want to delete this user? This action cannot be undone.',
+      t('admin.users.deleteUser'),
+      t('admin.users.deleteConfirm'),
       async () => {
         try {
           await adminAPI.deleteUser(userId);
           loadUsers();
-          showAlert('Success', 'User deleted successfully', 'success');
+          showAlert(t('common.success'), t('admin.users.userDeleted'), 'success');
         } catch (error: any) {
           console.error('Failed to delete user:', error);
-          showAlert('Error', error.response?.data?.detail || 'Failed to delete user', 'error');
+          showAlert(t('common.error'), error.response?.data?.detail || t('admin.users.deleteFailed'), 'error');
         }
       },
-      { confirmText: 'Delete', confirmButtonClass: 'bg-red-600 hover:bg-red-700' }
+      { confirmText: t('common.delete'), confirmButtonClass: 'bg-red-600 hover:bg-red-700' }
     );
   };
 
@@ -104,17 +106,17 @@ export default function AdminUsersPage() {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              User Management
+              {t('admin.users.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Manage all user accounts
+              {t('admin.users.subtitle')}
             </p>
           </div>
           <button
             onClick={() => navigate('/admin')}
             className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
           >
-            Back to Dashboard
+            {t('common.back')} to {t('admin.dashboard.title')}
           </button>
         </div>
 
@@ -125,7 +127,7 @@ export default function AdminUsersPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by name or email..."
+                placeholder={t('admin.users.search')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -137,7 +139,7 @@ export default function AdminUsersPage() {
               onChange={(e) => setRoleFilter(e.target.value)}
               className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
-              <option value="">All Roles</option>
+              <option value="">{t('admin.users.allRoles')}</option>
               <option value="user">User</option>
               <option value="driver">Driver</option>
               <option value="admin">Admin</option>
@@ -147,7 +149,7 @@ export default function AdminUsersPage() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
-              <option value="">All Status</option>
+              <option value="">{t('admin.users.allStatus')}</option>
               <option value="ACTIVE">Active</option>
               <option value="SUSPENDED">Suspended</option>
               <option value="BANNED">Banned</option>
@@ -157,7 +159,7 @@ export default function AdminUsersPage() {
               className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 flex items-center justify-center gap-2"
             >
               <Filter className="w-4 h-4" />
-              Filter
+              {t('common.filter')}
             </button>
           </div>
         </div>
@@ -167,12 +169,12 @@ export default function AdminUsersPage() {
           {loading ? (
             <div className="p-12 text-center">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600"></div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">Loading users...</p>
+              <p className="mt-4 text-gray-600 dark:text-gray-400">{t('admin.users.loading')}</p>
             </div>
           ) : users.length === 0 ? (
             <div className="p-12 text-center">
               <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 dark:text-gray-400">No users found</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('admin.users.noUsers')}</p>
             </div>
           ) : (
             <>

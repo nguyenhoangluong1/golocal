@@ -183,8 +183,8 @@ export default function HomeTesla() {
       <Hero 
         onSearch={handleSearch}
         backgroundImage={heroImage}
-        title="Discover Vietnam"
-        subtitle="Over 1,000 quality vehicles ready for every journey"
+        title={t('home.discoverVietnam')}
+        subtitle={t('home.discoverVietnamDesc')}
       />
 
       {/* Stats Bar */}

@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Phone, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useI18n } from '../contexts/I18nContext';
 
 export default function SignupPage() {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -32,22 +34,28 @@ export default function SignupPage() {
     setError('');
 
     if (!isPasswordValid) {
-      setError('Please meet all password requirements');
+      setError(t('signup.meetRequirements'));
       return;
     }
 
     setLoading(true);
 
     try {
+      // Ensure phone is undefined if empty, not empty string
+      const phoneValue = formData.phone.trim() || undefined;
+      
       await register(
         formData.email,
         formData.password,
-        formData.name,
-        formData.phone || undefined
+        formData.name.trim(),
+        phoneValue
       );
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Registration failed. Please try again.');
+      // Show detailed error message from backend
+      const errorMessage = err.response?.data?.detail || err.message || t('signup.registrationFailed');
+      console.error('Registration error:', err.response?.data);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -56,7 +64,7 @@ export default function SignupPage() {
   const handleGoogleSignup = () => {
     const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     if (!GOOGLE_CLIENT_ID) {
-      setError('Google signup is not configured. Please add VITE_GOOGLE_CLIENT_ID to .env');
+      setError(t('signup.googleNotConfigured'));
       return;
     }
 
@@ -70,7 +78,7 @@ export default function SignupPage() {
   const handleFacebookSignup = () => {
     const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
     if (!FACEBOOK_APP_ID) {
-      setError('Facebook signup is not configured. Please add VITE_FACEBOOK_APP_ID to .env');
+      setError(t('signup.facebookNotConfigured'));
       return;
     }
 
@@ -92,10 +100,10 @@ export default function SignupPage() {
             </span>
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
-            Join GoLocal
+            {t('signup.title')}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm tracking-wide">
-            Start your journey with us today
+            {t('signup.subtitle')}
           </p>
         </div>
 
@@ -166,7 +174,7 @@ export default function SignupPage() {
           {/* Name Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 tracking-wide">
-              FULL NAME
+              {t('signup.name').toUpperCase()}
             </label>
             <div className="relative">
               <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -184,7 +192,7 @@ export default function SignupPage() {
           {/* Email Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 tracking-wide">
-              EMAIL
+              {t('signup.email').toUpperCase()}
             </label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -202,7 +210,7 @@ export default function SignupPage() {
           {/* Phone Input (Optional) */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 tracking-wide">
-              PHONE (OPTIONAL)
+              {t('signup.phone').toUpperCase()} ({t('common.optional') || 'OPTIONAL'})
             </label>
             <div className="relative">
               <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -244,7 +252,7 @@ export default function SignupPage() {
           {/* Confirm Password Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 tracking-wide">
-              CONFIRM PASSWORD
+              {t('signup.confirmPassword').toUpperCase()}
             </label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -270,7 +278,7 @@ export default function SignupPage() {
           {formData.password && (
             <div className="space-y-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <p className="text-xs font-medium text-gray-700 dark:text-gray-300 tracking-wide mb-2">
-                PASSWORD REQUIREMENTS:
+                {t('signup.passwordRequirements').toUpperCase()}:
               </p>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -280,7 +288,7 @@ export default function SignupPage() {
                     <div className="w-4 h-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
                   )}
                   <span className={`text-xs ${passwordRequirements.minLength ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
-                    At least 6 characters
+                    {t('signup.minLength')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -290,7 +298,7 @@ export default function SignupPage() {
                     <div className="w-4 h-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
                   )}
                   <span className={`text-xs ${passwordRequirements.hasDigit ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
-                    Contains a number
+                    {t('signup.hasDigit')}
                   </span>
                 </div>
                 {formData.confirmPassword && (
@@ -301,7 +309,7 @@ export default function SignupPage() {
                       <div className="w-4 h-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
                     )}
                     <span className={`text-xs ${passwordRequirements.match ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
-                      Passwords match
+                      {t('signup.match')}
                     </span>
                   </div>
                 )}
@@ -327,19 +335,19 @@ export default function SignupPage() {
             disabled={loading || !isPasswordValid}
             className="w-full py-3 px-4 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-medium tracking-widest text-sm rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT'}
+            {loading ? t('common.loading').toUpperCase() : t('signup.createAccount').toUpperCase()}
           </button>
         </form>
 
         {/* Login Link */}
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Already have an account?{' '}
+            {t('signup.alreadyHaveAccount')}{' '}
             <Link
               to="/login"
               className="font-medium text-gray-900 dark:text-white hover:underline"
             >
-              Sign in
+              {t('signup.signIn')}
             </Link>
           </p>
         </div>

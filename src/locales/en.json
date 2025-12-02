@@ -21,7 +21,9 @@
     "reset": "Reset",
     "yes": "Yes",
     "no": "No",
-    "ok": "OK"
+    "ok": "OK",
+    "forgotPassword": "Forgot password?",
+    "optional": "Optional"
   },
   "navbar": {
     "findCars": "FIND CARS",
@@ -102,6 +104,44 @@
       "reviewIdentityDocuments": "Review identity documents",
       "verifyUserInformation": "Verify user information",
       "approveOrReject": "Approve or reject applications"
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Manage all user accounts",
+      "search": "Search users...",
+      "allRoles": "All Roles",
+      "allStatus": "All Status",
+      "loading": "Loading users...",
+      "noUsers": "No users found",
+      "deleteUser": "Delete User",
+      "deleteConfirm": "Are you sure you want to delete this user? This action cannot be undone.",
+      "userDeleted": "User deleted successfully",
+      "deleteFailed": "Failed to delete user"
+    },
+    "vehicles": {
+      "title": "Vehicle Management",
+      "subtitle": "Review and verify vehicle listings",
+      "allStatus": "All Status",
+      "loading": "Loading vehicles...",
+      "noVehicles": "No vehicles found",
+      "approve": "Approve",
+      "reject": "Reject",
+      "deleteVehicle": "Delete Vehicle",
+      "deleteConfirm": "Are you sure you want to delete this vehicle? This action cannot be undone.",
+      "vehicleDeleted": "Vehicle deleted successfully",
+      "deleteFailed": "Failed to delete vehicle",
+      "approved": "Vehicle approved successfully",
+      "rejected": "Vehicle rejected successfully",
+      "verifyFailed": "Failed to verify vehicle"
+    },
+    "bookings": {
+      "title": "Booking Management",
+      "subtitle": "View and manage all bookings",
+      "allStatus": "All Status",
+      "loading": "Loading bookings...",
+      "noBookings": "No bookings found",
+      "statusUpdated": "Booking status updated successfully",
+      "updateFailed": "Failed to update booking status"
     }
   },
   "home": {
@@ -116,7 +156,9 @@
     "cityExploration": "City Exploration",
     "cityExplorationDesc": "Navigate through vibrant streets and discover local culture at your own pace",
     "featuredVehicles": "Featured Vehicles",
-    "featuredDestinations": "Featured Destinations"
+    "featuredDestinations": "Featured Destinations",
+    "discoverVietnam": "Discover Vietnam",
+    "discoverVietnamDesc": "Over 1,000 quality vehicles ready for every journey"
   },
   "cart": {
     "title": "Shopping Cart",
@@ -134,7 +176,17 @@
     "vehicleInfoMissing": "Vehicle information is missing",
     "failedToLoad": "Failed to load cart items",
     "bookingCreated": "Booking created successfully",
-    "paymentRedirect": "Redirecting to payment..."
+    "paymentRedirect": "Redirecting to payment...",
+    "tripPlanner": "Trip Planner",
+    "tripPlannerDesc": "Finalize your itinerary, confirm pricing, and schedule pickup windows.",
+    "loadingTripPlanner": "Loading your trip planner...",
+    "browseVehicles": "Browse Vehicles",
+    "pickup": "Pickup",
+    "return": "Return",
+    "duration": "Duration",
+    "dailyRate": "Daily Rate",
+    "proceedToPayment": "Proceed to Payment",
+    "tripSummary": "Trip Summary"
   },
   "payment": {
     "title": "Payment",
@@ -163,7 +215,21 @@
     "paymentFailedTryAgain": "Payment failed. Please try again.",
     "errorOccurred": "An error occurred during payment. Please try again.",
     "invalidPayment": "Invalid Payment",
-    "invalidPaymentInfo": "Invalid payment information. Please try again."
+    "invalidPaymentInfo": "Invalid payment information. Please try again.",
+    "completePayment": "Complete Payment",
+    "securePayment": "Secure payment powered by Stripe",
+    "securePaymentTitle": "Secure Payment",
+    "poweredByStripe": "Powered by Stripe",
+    "testMode": "TEST MODE",
+    "vehicle": "Vehicle",
+    "bookingId": "Booking ID",
+    "totalAmount": "Total Amount",
+    "creditDebitCard": "Credit/Debit Card",
+    "comingSoon": "Coming soon",
+    "americanExpress": "American Express",
+    "dinersClub": "Diners Club",
+    "tryAgain": "Try Again",
+    "securedBy": "Secured by"
   },
   "search": {
     "noResults": "No vehicles found",
@@ -172,7 +238,8 @@
     "page": "Page",
     "of": "of",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "allAreas": "ALL AREAS"
   },
   "booking": {
     "approve": "Approve",
@@ -189,6 +256,40 @@
     "unknown": "Unknown",
     "perDay": "per day",
     "viewDetails": "View Details"
-  }
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to continue your journey",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "orContinueWith": "Or continue with",
+    "dontHaveAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "loginFailed": "Login failed. Please check your credentials.",
+    "googleNotConfigured": "Google login is not configured. Please add VITE_GOOGLE_CLIENT_ID to .env",
+    "facebookNotConfigured": "Facebook login is not configured. Please add VITE_FACEBOOK_APP_ID to .env"
+  },
+  "signup": {
+    "title": "Join GoLocal",
+    "subtitle": "Start your journey with us today",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "createAccount": "Create Account",
+    "orContinueWith": "Or continue with",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "passwordRequirements": "Password Requirements",
+    "minLength": "At least 6 characters",
+    "hasDigit": "Contains at least one number",
+    "match": "Passwords match",
+    "meetRequirements": "Please meet all password requirements",
+    "registrationFailed": "Registration failed. Please try again.",
+    "googleNotConfigured": "Google signup is not configured. Please add VITE_GOOGLE_CLIENT_ID to .env",
+    "facebookNotConfigured": "Facebook signup is not configured. Please add VITE_FACEBOOK_APP_ID to .env"
+  },
 }
 

@@ -153,8 +153,8 @@ export default function PaymentPage() {
           {/* Stripe Logo & Branding */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Complete Payment</h1>
-              <p className="text-gray-600 dark:text-gray-400">Secure payment powered by Stripe</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{t('payment.completePayment')}</h1>
+              <p className="text-gray-600 dark:text-gray-400">{t('payment.securePayment')}</p>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
               <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -175,12 +175,12 @@ export default function PaymentPage() {
                   <CreditCard className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-white font-semibold text-lg">Secure Payment</h2>
-                  <p className="text-white/80 text-sm">Powered by Stripe</p>
+                  <h2 className="text-white font-semibold text-lg">{t('payment.securePaymentTitle')}</h2>
+                  <p className="text-white/80 text-sm">{t('payment.poweredByStripe')}</p>
                 </div>
               </div>
               <div className="px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg">
-                <span className="text-white text-xs font-medium">TEST MODE</span>
+                <span className="text-white text-xs font-medium">{t('payment.testMode')}</span>
               </div>
             </div>
           </div>
@@ -194,15 +194,15 @@ export default function PaymentPage() {
             </h2>
             <div className="space-y-3">
               <div className="flex items-center justify-between py-2 border-b border-gray-200/50 dark:border-gray-700/50">
-                <span className="text-gray-600 dark:text-gray-400">Vehicle</span>
+                <span className="text-gray-600 dark:text-gray-400">{t('payment.vehicle')}</span>
                 <span className="font-medium text-gray-900 dark:text-white">{paymentState.vehicleName}</span>
               </div>
               <div className="flex items-center justify-between py-2 border-b border-gray-200/50 dark:border-gray-700/50">
-                <span className="text-gray-600 dark:text-gray-400">Booking ID</span>
+                <span className="text-gray-600 dark:text-gray-400">{t('payment.bookingId')}</span>
                 <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{paymentState.bookingId.substring(0, 8)}...</span>
               </div>
               <div className="flex items-center justify-between pt-2">
-                <span className="text-lg font-semibold text-gray-900 dark:text-white">Total Amount</span>
+                <span className="text-lg font-semibold text-gray-900 dark:text-white">{t('payment.totalAmount')}</span>
                 <span className="text-3xl font-bold bg-gradient-to-r from-[#635BFF] to-[#8B80FF] bg-clip-text text-transparent">
                   ₫{paymentState.amount.toLocaleString('vi-VN')}
                 </span>
@@ -266,7 +266,7 @@ export default function PaymentPage() {
                     <div className={`p-3 rounded-lg ${paymentMethod === 'card' ? 'bg-[#635BFF]' : 'bg-gray-100 dark:bg-gray-700'}`}>
                       <CreditCard className={`w-6 h-6 ${paymentMethod === 'card' ? 'text-white' : 'text-gray-600 dark:text-gray-400'}`} />
                     </div>
-                    <span className="font-semibold text-sm">Credit/Debit Card</span>
+                    <span className="font-semibold text-sm">{t('payment.creditDebitCard')}</span>
                     <div className="flex items-center gap-1.5 mt-1">
                       <img 
                         src="https://cdn.simpleicons.org/visa/1A1F71" 
@@ -303,8 +303,8 @@ export default function PaymentPage() {
                     <div className="p-3 rounded-lg bg-gray-100 dark:bg-gray-700">
                       <Building2 className="w-6 h-6 text-gray-400" />
                     </div>
-                    <span className="font-semibold text-sm">Bank Transfer</span>
-                    <span className="text-xs text-gray-500 absolute bottom-2">Coming soon</span>
+                    <span className="font-semibold text-sm">{t('payment.bankTransfer')}</span>
+                    <span className="text-xs text-gray-500 absolute bottom-2">{t('payment.comingSoon')}</span>
                   </button>
                 </div>
               </div>
@@ -332,10 +332,10 @@ export default function PaymentPage() {
                       >
                         <option value="visa">Visa</option>
                         <option value="mastercard">Mastercard</option>
-                        <option value="amex">American Express</option>
+                        <option value="amex">{t('payment.americanExpress')}</option>
                         <option value="discover">Discover</option>
                         <option value="jcb">JCB</option>
-                        <option value="diners">Diners Club</option>
+                        <option value="diners">{t('payment.dinersClub')}</option>
                       </select>
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                         <ChevronDown className="w-5 h-5 text-gray-400" />
@@ -365,7 +365,7 @@ export default function PaymentPage() {
                         {cardType === 'amex' && (
                           <img 
                             src="https://cdn.simpleicons.org/americanexpress/006FCF" 
-                            alt="American Express" 
+                            alt={t('payment.americanExpress')} 
                             className="w-12 h-7 object-contain"
                             onError={(e) => {
                               e.currentTarget.src = 'https://logos-world.net/wp-content/uploads/2020/04/American-Express-Logo.png';
@@ -395,7 +395,7 @@ export default function PaymentPage() {
                         {cardType === 'diners' && (
                           <img 
                             src="https://cdn.simpleicons.org/dinersclub/0079BE" 
-                            alt="Diners Club" 
+                            alt={t('payment.dinersClub')} 
                             className="w-12 h-7 object-contain"
                             onError={(e) => {
                               e.currentTarget.src = 'https://logos-world.net/wp-content/uploads/2020/04/Diners-Club-Logo.png';
@@ -454,7 +454,7 @@ export default function PaymentPage() {
                         {cardType === 'amex' && (
                           <img 
                             src="https://cdn.simpleicons.org/americanexpress/006FCF" 
-                            alt="American Express" 
+                            alt={t('payment.americanExpress')} 
                             className="w-12 h-7 object-contain"
                             onError={(e) => {
                               e.currentTarget.src = 'https://logos-world.net/wp-content/uploads/2020/04/American-Express-Logo.png';
@@ -484,7 +484,7 @@ export default function PaymentPage() {
                         {cardType === 'diners' && (
                           <img 
                             src="https://cdn.simpleicons.org/dinersclub/0079BE" 
-                            alt="Diners Club" 
+                            alt={t('payment.dinersClub')} 
                             className="w-12 h-7 object-contain"
                             onError={(e) => {
                               e.currentTarget.src = 'https://logos-world.net/wp-content/uploads/2020/04/Diners-Club-Logo.png';
@@ -588,7 +588,7 @@ export default function PaymentPage() {
                       <span>Processing...</span>
                     </>
                   ) : (
-                    'Try Again'
+                    t('payment.tryAgain')
                   )}
                 </button>
               )}
@@ -611,7 +611,7 @@ export default function PaymentPage() {
             <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
-            <span className="text-gray-600 dark:text-gray-400 font-medium">Secured by</span>
+            <span className="text-gray-600 dark:text-gray-400 font-medium">{t('payment.securedBy')}</span>
             <svg className="w-12 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.549-.795-6.824-1.932l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z" fill="#635BFF"/>
             </svg>

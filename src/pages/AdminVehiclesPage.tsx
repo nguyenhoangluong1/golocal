@@ -5,6 +5,7 @@ import { Car, CheckCircle, XCircle } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ConfirmDialog from '../components/common/ConfirmDialog';
 import AlertDialog from '../components/common/AlertDialog';
+import { useI18n } from '../contexts/I18nContext';
 
 interface Vehicle {
   id: string;
@@ -26,6 +27,7 @@ interface Vehicle {
 export default function AdminVehiclesPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [searchParams] = useSearchParams();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,16 +83,16 @@ export default function AdminVehiclesPage() {
       loadVehicles();
       setAlertDialog({
         isOpen: true,
-        title: 'Success',
-        message: `Vehicle ${status === 'APPROVED' ? 'approved' : 'rejected'} successfully`,
+        title: t('common.success'),
+        message: status === 'APPROVED' ? t('admin.vehicles.approved') : t('admin.vehicles.rejected'),
         type: 'success',
       });
     } catch (error: any) {
       console.error('Failed to verify vehicle:', error);
       setAlertDialog({
         isOpen: true,
-        title: 'Error',
-        message: error.response?.data?.detail || 'Failed to verify vehicle',
+        title: t('common.error'),
+        message: error.response?.data?.detail || t('admin.vehicles.verifyFailed'),
         type: 'error',
       });
     }
@@ -114,8 +116,8 @@ export default function AdminVehiclesPage() {
       loadVehicles();
       setAlertDialog({
         isOpen: true,
-        title: 'Success',
-        message: 'Vehicle deleted successfully',
+        title: t('common.success'),
+        message: t('admin.vehicles.vehicleDeleted'),
         type: 'success',
       });
     } catch (error: any) {
@@ -123,8 +125,8 @@ export default function AdminVehiclesPage() {
       setDeleteDialog(null);
       setAlertDialog({
         isOpen: true,
-        title: 'Error',
-        message: error.response?.data?.detail || 'Failed to delete vehicle',
+        title: t('common.error'),
+        message: error.response?.data?.detail || t('admin.vehicles.deleteFailed'),
         type: 'error',
       });
     } finally {
@@ -143,17 +145,17 @@ export default function AdminVehiclesPage() {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Vehicle Approval
+              {t('admin.vehicles.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Review and verify vehicle listings
+              {t('admin.vehicles.subtitle')}
             </p>
           </div>
           <button
             onClick={() => navigate('/admin')}
             className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
           >
-            Back to Dashboard
+            {t('common.back')} to {t('admin.dashboard.title')}
           </button>
         </div>
 
@@ -164,7 +166,7 @@ export default function AdminVehiclesPage() {
             onChange={(e) => setVerificationFilter(e.target.value)}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
-            <option value="">All Status</option>
+            <option value="">{t('admin.vehicles.allStatus')}</option>
             <option value="PENDING">Pending</option>
             <option value="APPROVED">Approved</option>
             <option value="REJECTED">Rejected</option>
@@ -176,12 +178,12 @@ export default function AdminVehiclesPage() {
           {loading ? (
             <div className="col-span-full text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600"></div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">Loading vehicles...</p>
+              <p className="mt-4 text-gray-600 dark:text-gray-400">{t('admin.vehicles.loading')}</p>
             </div>
           ) : vehicles.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <Car className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 dark:text-gray-400">No vehicles found</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('admin.vehicles.noVehicles')}</p>
             </div>
           ) : (
             vehicles.map((vehicle) => (
@@ -225,7 +227,7 @@ export default function AdminVehiclesPage() {
                       ₫{vehicle.price_per_day.toLocaleString('vi-VN')}/day
                     </div>
                     <div className="text-xs">
-                      Owner: {vehicle.owner?.name || 'Unknown'}
+                      {t('vehicle.owner')}: {vehicle.owner?.name || t('vehicle.unknown')}
                     </div>
                   </div>
 
@@ -238,17 +240,17 @@ export default function AdminVehiclesPage() {
                           className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center gap-2"
                         >
                           <CheckCircle className="w-4 h-4" />
-                          Approve
+                          {t('admin.vehicles.approve')}
                         </button>
                         <button
                           onClick={() => {
-                            const reason = prompt('Rejection reason:');
+                            const reason = prompt(t('booking.rejectionReason'));
                             if (reason) handleVerify(vehicle.id, 'REJECTED', reason);
                           }}
                           className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center justify-center gap-2"
                         >
                           <XCircle className="w-4 h-4" />
-                          Reject
+                          {t('admin.vehicles.reject')}
                         </button>
                       </div>
                     )}
@@ -257,7 +259,7 @@ export default function AdminVehiclesPage() {
                       className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center justify-center gap-2"
                     >
                       <XCircle className="w-4 h-4" />
-                      Delete Vehicle
+                      {t('admin.vehicles.deleteVehicle')}
                     </button>
                   </div>
                 </div>
@@ -278,14 +280,14 @@ export default function AdminVehiclesPage() {
                 disabled={page === 1}
                 className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50"
               >
-                Previous
+                {t('common.previous')}
               </button>
               <button
                 onClick={() => setPage(p => p + 1)}
                 disabled={page * 20 >= total}
                 className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50"
               >
-                Next
+                {t('common.next')}
               </button>
             </div>
           </div>
@@ -298,10 +300,10 @@ export default function AdminVehiclesPage() {
           isOpen={deleteDialog.isOpen}
           onClose={() => setDeleteDialog(null)}
           onConfirm={handleDeleteConfirm}
-          title="Delete Vehicle"
-          message={`Are you sure you want to delete "${deleteDialog.vehicleName}"? This will also delete all related bookings, reviews, and favorites. This action cannot be undone.`}
-          confirmText="Delete"
-          cancelText="Cancel"
+          title={t('admin.vehicles.deleteVehicle')}
+          message={t('admin.vehicles.deleteConfirm')}
+          confirmText={t('common.delete')}
+          cancelText={t('common.cancel')}
           confirmButtonClass="bg-red-600 hover:bg-red-700"
           isLoading={isDeleting}
         />

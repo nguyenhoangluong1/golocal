@@ -4,6 +4,7 @@ import { adminAPI } from '../utils/api';
 import { Calendar, CheckCircle, XCircle } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDialog } from '../hooks/useDialog';
+import { useI18n } from '../contexts/I18nContext';
 
 interface Booking {
   id: string;
@@ -29,6 +30,7 @@ interface Booking {
 export default function AdminBookingsPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [searchParams] = useSearchParams();
   const { showAlert, DialogComponents } = useDialog();
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -116,17 +118,17 @@ export default function AdminBookingsPage() {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Booking Management
+              {t('admin.bookings.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              View and manage all bookings
+              {t('admin.bookings.subtitle')}
             </p>
           </div>
           <button
             onClick={() => navigate('/admin')}
             className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
           >
-            Back to Dashboard
+            {t('common.back')} to {t('admin.dashboard.title')}
           </button>
         </div>
 
@@ -137,7 +139,7 @@ export default function AdminBookingsPage() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
-            <option value="">All Status</option>
+            <option value="">{t('admin.bookings.allStatus')}</option>
             <option value="PENDING">Pending</option>
             <option value="CONFIRMED">Confirmed</option>
             <option value="COMPLETED">Completed</option>
@@ -150,12 +152,12 @@ export default function AdminBookingsPage() {
           {loading ? (
             <div className="p-12 text-center">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600"></div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">Loading bookings...</p>
+              <p className="mt-4 text-gray-600 dark:text-gray-400">{t('admin.bookings.loading')}</p>
             </div>
           ) : bookings.length === 0 ? (
             <div className="p-12 text-center">
               <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 dark:text-gray-400">No bookings found</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('admin.bookings.noBookings')}</p>
             </div>
           ) : (
             <>

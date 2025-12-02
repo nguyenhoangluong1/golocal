@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useI18n } from '../contexts/I18nContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -23,7 +25,7 @@ export default function LoginPage() {
       await login(formData.email, formData.password);
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      setError(err.message || t('login.loginFailed'));
     } finally {
       setLoading(false);
     }
@@ -32,7 +34,7 @@ export default function LoginPage() {
   const handleGoogleLogin = () => {
     const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     if (!GOOGLE_CLIENT_ID) {
-      setError('Google login is not configured. Please add VITE_GOOGLE_CLIENT_ID to .env');
+      setError(t('login.googleNotConfigured'));
       return;
     }
 
@@ -46,7 +48,7 @@ export default function LoginPage() {
   const handleFacebookLogin = () => {
     const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
     if (!FACEBOOK_APP_ID) {
-      setError('Facebook login is not configured. Please add VITE_FACEBOOK_APP_ID to .env');
+      setError(t('login.facebookNotConfigured'));
       return;
     }
 
@@ -68,10 +70,10 @@ export default function LoginPage() {
             </span>
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
-            Welcome back
+            {t('login.title')}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm tracking-wide">
-            Sign in to continue your journey
+            {t('login.subtitle')}
           </p>
         </div>
 
@@ -142,7 +144,7 @@ export default function LoginPage() {
           {/* Email Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 tracking-wide">
-              EMAIL
+              {t('login.email').toUpperCase()}
             </label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -160,7 +162,7 @@ export default function LoginPage() {
           {/* Password Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 tracking-wide">
-              PASSWORD
+              {t('login.password').toUpperCase()}
             </label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -188,7 +190,7 @@ export default function LoginPage() {
               to="/forgot-password"
               className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white tracking-wide transition-colors"
             >
-              Forgot password?
+              {t('common.forgotPassword') || 'Forgot password?'}
             </Link>
           </div>
 
@@ -198,19 +200,19 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full py-3 px-4 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-medium tracking-widest text-sm rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'SIGNING IN...' : 'SIGN IN'}
+            {loading ? t('common.loading').toUpperCase() : t('login.signIn').toUpperCase()}
           </button>
         </form>
 
         {/* Sign Up Link */}
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Don't have an account?{' '}
+            {t('login.dontHaveAccount')}{' '}
             <Link
               to="/signup"
               className="font-medium text-gray-900 dark:text-white hover:underline"
             >
-              Sign up
+              {t('login.signUp')}
             </Link>
           </p>
         </div>

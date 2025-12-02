@@ -53,6 +53,7 @@ export default function VehicleDetailPage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [showKYCModal, setShowKYCModal] = useState(false);
+  const [dateError, setDateError] = useState('');
 
   useEffect(() => {
     if (id) {
@@ -76,6 +77,78 @@ export default function VehicleDetailPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
+
+  // Validate dates when they change
+  useEffect(() => {
+    if (!startDate && !endDate) {
+      setDateError('');
+      return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear() + 1); // Max 1 year in advance
+    const maxDateStr = maxDate.toISOString().split('T')[0];
+
+    if (startDate) {
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+
+      // Check if start date is in the past
+      if (start < today) {
+        setDateError('Start date cannot be in the past');
+        return;
+      }
+
+      // Check if start date is too far in the future
+      if (start > maxDate) {
+        setDateError('Start date cannot be more than 1 year in advance');
+        return;
+      }
+
+      // If end date is set, validate it
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(0, 0, 0, 0);
+
+        if (end < start) {
+          setDateError('End date must be after start date');
+          return;
+        }
+
+        if (end > maxDate) {
+          setDateError('End date cannot be more than 1 year in advance');
+          return;
+        }
+
+        // Check minimum rental period (at least 1 day)
+        const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+        if (days < 1) {
+          setDateError('Minimum rental period is 1 day');
+          return;
+        }
+
+        // Check maximum rental period (e.g., 90 days)
+        if (days > 90) {
+          setDateError('Maximum rental period is 90 days');
+          return;
+        }
+      }
+    }
+
+    if (endDate && !startDate) {
+      const end = new Date(endDate);
+      end.setHours(0, 0, 0, 0);
+
+      if (end < today) {
+        setDateError('End date cannot be in the past');
+        return;
+      }
+    }
+
+    setDateError('');
+  }, [startDate, endDate]);
 
   const loadVehicle = async () => {
     if (!id) {
@@ -112,6 +185,8 @@ export default function VehicleDetailPage() {
     if (!startDate || !endDate) return 0;
     const start = new Date(startDate);
     const end = new Date(endDate);
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
     const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
     return days > 0 ? days : 0;
   };
@@ -179,13 +254,23 @@ export default function VehicleDetailPage() {
 
     // Validate dates
     if (!startDate || !endDate) {
-      showWarning('Please select start and end dates');
+      showWarning('Please select both start and end dates');
+      return;
+    }
+
+    if (dateError) {
+      showWarning(dateError);
       return;
     }
 
     const days = calculateDays();
-    if (days <= 0) {
-      showWarning('End date must be after start date');
+    if (days < 1) {
+      showWarning('Minimum rental period is 1 day');
+      return;
+    }
+
+    if (days > 90) {
+      showWarning('Maximum rental period is 90 days');
       return;
     }
 
@@ -527,9 +612,23 @@ export default function VehicleDetailPage() {
                   <input
                     type="date"
                     value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    onChange={(e) => {
+                      const newStartDate = e.target.value;
+                      setStartDate(newStartDate);
+                      // If end date is before new start date, reset end date
+                      if (endDate && newStartDate && new Date(endDate) < new Date(newStartDate)) {
+                        setEndDate('');
+                      }
+                    }}
                     min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    max={(() => {
+                      const maxDate = new Date();
+                      maxDate.setFullYear(maxDate.getFullYear() + 1);
+                      return maxDate.toISOString().split('T')[0];
+                    })()}
+                    className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
+                      dateError && !endDate ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'
+                    }`}
                   />
                 </div>
                 <div>
@@ -541,8 +640,21 @@ export default function VehicleDetailPage() {
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                     min={startDate || new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    max={(() => {
+                      const maxDate = new Date();
+                      maxDate.setFullYear(maxDate.getFullYear() + 1);
+                      return maxDate.toISOString().split('T')[0];
+                    })()}
+                    className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
+                      dateError ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'
+                    }`}
                   />
+                  {dateError && (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {dateError}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -559,7 +671,7 @@ export default function VehicleDetailPage() {
               {/* Book Button */}
               <button
                 onClick={handleBooking}
-                disabled={!startDate || !endDate || !vehicle.available || bookingLoading}
+                disabled={!startDate || !endDate || !vehicle.available || bookingLoading || !!dateError}
                 className="w-full py-4 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {bookingLoading ? (

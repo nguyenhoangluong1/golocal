@@ -121,7 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       const response = await authApi.post('/auth/login', {
-        email,
+        email: email.trim(),
         password
       });
 
@@ -130,25 +130,64 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('user_data', JSON.stringify(userData));
       setUser(userData);
     } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Login failed');
+      // Log full error for debugging
+      console.error('Login API error:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+      
+      // Return detailed error message
+      const errorDetail = error.response?.data?.detail;
+      if (errorDetail) {
+        throw new Error(errorDetail);
+      }
+      throw new Error(error.message || 'Login failed');
     }
   };
 
   const register = async (email: string, password: string, name: string, phone?: string) => {
     try {
-      const response = await authApi.post('/auth/register', {
-        email,
+      // Build request body - only include phone if it's provided
+      const requestBody: { email: string; password: string; name: string; phone?: string } = {
+        email: email.trim(),
         password,
-        name,
-        phone
-      });
+        name: name.trim(),
+      };
+      
+      // Only include phone if it's not empty/undefined
+      if (phone && phone.trim()) {
+        requestBody.phone = phone.trim();
+      }
+      
+      const response = await authApi.post('/auth/register', requestBody);
 
       const { access_token, user: userData } = response.data;
       localStorage.setItem('access_token', access_token);
       localStorage.setItem('user_data', JSON.stringify(userData));
       setUser(userData);
     } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Registration failed');
+      // Log full error for debugging
+      console.error('Registration API error:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+      
+      // Return detailed error message
+      const errorDetail = error.response?.data?.detail;
+      if (errorDetail) {
+        // If it's a validation error, show the specific field error
+        if (error.response?.status === 422 && Array.isArray(error.response?.data?.detail)) {
+          const validationErrors = error.response.data.detail.map((err: any) => {
+            const field = err.loc?.join('.') || 'field';
+            return `${field}: ${err.msg}`;
+          }).join(', ');
+          throw new Error(validationErrors);
+        }
+        throw new Error(errorDetail);
+      }
+      throw new Error(error.message || 'Registration failed');
     }
   };
 

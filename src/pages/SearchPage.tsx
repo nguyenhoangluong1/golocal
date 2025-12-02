@@ -313,7 +313,7 @@ export default function SearchPage() {
                         </div>
                       </div>
                       <div className="px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-xl text-xs font-bold tracking-wide shadow-lg">
-                        {currentFilters.city || 'ALL AREAS'}
+                        {currentFilters.city || t('search.allAreas')}
                       </div>
                     </div>
                   </div>

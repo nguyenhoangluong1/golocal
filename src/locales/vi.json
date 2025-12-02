@@ -21,7 +21,9 @@
     "reset": "Đặt lại",
     "yes": "Có",
     "no": "Không",
-    "ok": "OK"
+    "ok": "OK",
+    "forgotPassword": "Quên mật khẩu?",
+    "optional": "Tùy chọn"
   },
   "navbar": {
     "findCars": "TÌM XE",
@@ -102,6 +104,44 @@
       "reviewIdentityDocuments": "Xem xét tài liệu nhận dạng",
       "verifyUserInformation": "Xác minh thông tin người dùng",
       "approveOrReject": "Phê duyệt hoặc từ chối đơn đăng ký"
+    },
+    "users": {
+      "title": "Quản lý người dùng",
+      "subtitle": "Quản lý tất cả tài khoản người dùng",
+      "search": "Tìm kiếm người dùng...",
+      "allRoles": "Tất cả vai trò",
+      "allStatus": "Tất cả trạng thái",
+      "loading": "Đang tải người dùng...",
+      "noUsers": "Không tìm thấy người dùng",
+      "deleteUser": "Xóa người dùng",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa người dùng này? Hành động này không thể hoàn tác.",
+      "userDeleted": "Đã xóa người dùng thành công",
+      "deleteFailed": "Không thể xóa người dùng"
+    },
+    "vehicles": {
+      "title": "Quản lý phương tiện",
+      "subtitle": "Xem xét và xác minh danh sách phương tiện",
+      "allStatus": "Tất cả trạng thái",
+      "loading": "Đang tải phương tiện...",
+      "noVehicles": "Không tìm thấy phương tiện",
+      "approve": "Phê duyệt",
+      "reject": "Từ chối",
+      "deleteVehicle": "Xóa phương tiện",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa phương tiện này? Hành động này không thể hoàn tác.",
+      "vehicleDeleted": "Đã xóa phương tiện thành công",
+      "deleteFailed": "Không thể xóa phương tiện",
+      "approved": "Đã phê duyệt phương tiện thành công",
+      "rejected": "Đã từ chối phương tiện thành công",
+      "verifyFailed": "Không thể xác minh phương tiện"
+    },
+    "bookings": {
+      "title": "Quản lý đặt chỗ",
+      "subtitle": "Xem và quản lý tất cả các đặt chỗ",
+      "allStatus": "Tất cả trạng thái",
+      "loading": "Đang tải đặt chỗ...",
+      "noBookings": "Không tìm thấy đặt chỗ",
+      "statusUpdated": "Đã cập nhật trạng thái đặt chỗ thành công",
+      "updateFailed": "Không thể cập nhật trạng thái đặt chỗ"
     }
   },
   "home": {
@@ -116,7 +156,9 @@
     "cityExploration": "Khám phá thành phố",
     "cityExplorationDesc": "Điều hướng qua các con phố sôi động và khám phá văn hóa địa phương theo tốc độ của riêng bạn",
     "featuredVehicles": "Phương tiện nổi bật",
-    "featuredDestinations": "Điểm đến nổi bật"
+    "featuredDestinations": "Điểm đến nổi bật",
+    "discoverVietnam": "Khám phá Việt Nam",
+    "discoverVietnamDesc": "Hơn 1,000 phương tiện chất lượng sẵn sàng cho mọi hành trình"
   },
   "cart": {
     "title": "Giỏ hàng",
@@ -134,7 +176,17 @@
     "vehicleInfoMissing": "Thông tin phương tiện bị thiếu",
     "failedToLoad": "Không thể tải các mục trong giỏ hàng",
     "bookingCreated": "Đã tạo đặt chỗ thành công",
-    "paymentRedirect": "Đang chuyển hướng đến thanh toán..."
+    "paymentRedirect": "Đang chuyển hướng đến thanh toán...",
+    "tripPlanner": "Lập kế hoạch chuyến đi",
+    "tripPlannerDesc": "Hoàn tất lịch trình của bạn, xác nhận giá và lên lịch cửa sổ đón xe.",
+    "loadingTripPlanner": "Đang tải trình lập kế hoạch chuyến đi...",
+    "browseVehicles": "Duyệt phương tiện",
+    "pickup": "Đón",
+    "return": "Trả",
+    "duration": "Thời lượng",
+    "dailyRate": "Giá mỗi ngày",
+    "proceedToPayment": "Tiến hành thanh toán",
+    "tripSummary": "Tóm tắt chuyến đi"
   },
   "payment": {
     "title": "Thanh toán",
@@ -163,7 +215,21 @@
     "paymentFailedTryAgain": "Thanh toán thất bại. Vui lòng thử lại.",
     "errorOccurred": "Đã xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại.",
     "invalidPayment": "Thanh toán không hợp lệ",
-    "invalidPaymentInfo": "Thông tin thanh toán không hợp lệ. Vui lòng thử lại."
+    "invalidPaymentInfo": "Thông tin thanh toán không hợp lệ. Vui lòng thử lại.",
+    "completePayment": "Hoàn tất thanh toán",
+    "securePayment": "Thanh toán an toàn được hỗ trợ bởi Stripe",
+    "securePaymentTitle": "Thanh toán an toàn",
+    "poweredByStripe": "Được hỗ trợ bởi Stripe",
+    "testMode": "CHẾ ĐỘ THỬ NGHIỆM",
+    "vehicle": "Phương tiện",
+    "bookingId": "Mã đặt chỗ",
+    "totalAmount": "Tổng số tiền",
+    "creditDebitCard": "Thẻ tín dụng/Ghi nợ",
+    "comingSoon": "Sắp ra mắt",
+    "americanExpress": "American Express",
+    "dinersClub": "Diners Club",
+    "tryAgain": "Thử lại",
+    "securedBy": "Được bảo mật bởi"
   },
   "search": {
     "noResults": "Không tìm thấy phương tiện",
@@ -172,7 +238,8 @@
     "page": "Trang",
     "of": "của",
     "previous": "Trước",
-    "next": "Tiếp theo"
+    "next": "Tiếp theo",
+    "allAreas": "TẤT CẢ KHU VỰC"
   },
   "booking": {
     "approve": "Phê duyệt",
@@ -189,6 +256,40 @@
     "unknown": "Không xác định",
     "perDay": "mỗi ngày",
     "viewDetails": "Xem chi tiết"
-  }
+  },
+  "login": {
+    "title": "Chào mừng trở lại",
+    "subtitle": "Đăng nhập để tiếp tục hành trình của bạn",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "signIn": "Đăng nhập",
+    "orContinueWith": "Hoặc tiếp tục với",
+    "dontHaveAccount": "Chưa có tài khoản?",
+    "signUp": "Đăng ký",
+    "loginFailed": "Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập của bạn.",
+    "googleNotConfigured": "Đăng nhập Google chưa được cấu hình. Vui lòng thêm VITE_GOOGLE_CLIENT_ID vào .env",
+    "facebookNotConfigured": "Đăng nhập Facebook chưa được cấu hình. Vui lòng thêm VITE_FACEBOOK_APP_ID vào .env"
+  },
+  "signup": {
+    "title": "Tham gia GoLocal",
+    "subtitle": "Bắt đầu hành trình của bạn với chúng tôi ngay hôm nay",
+    "name": "Họ và tên",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "createAccount": "Tạo tài khoản",
+    "orContinueWith": "Hoặc tiếp tục với",
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "signIn": "Đăng nhập",
+    "passwordRequirements": "Yêu cầu mật khẩu",
+    "minLength": "Ít nhất 6 ký tự",
+    "hasDigit": "Chứa ít nhất một số",
+    "match": "Mật khẩu khớp",
+    "meetRequirements": "Vui lòng đáp ứng tất cả các yêu cầu về mật khẩu",
+    "registrationFailed": "Đăng ký thất bại. Vui lòng thử lại.",
+    "googleNotConfigured": "Đăng ký Google chưa được cấu hình. Vui lòng thêm VITE_GOOGLE_CLIENT_ID vào .env",
+    "facebookNotConfigured": "Đăng ký Facebook chưa được cấu hình. Vui lòng thêm VITE_FACEBOOK_APP_ID vào .env"
+  },
 }
 
