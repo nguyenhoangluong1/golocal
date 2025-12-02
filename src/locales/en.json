@@ -290,6 +290,6 @@
     "registrationFailed": "Registration failed. Please try again.",
     "googleNotConfigured": "Google signup is not configured. Please add VITE_GOOGLE_CLIENT_ID to .env",
     "facebookNotConfigured": "Facebook signup is not configured. Please add VITE_FACEBOOK_APP_ID to .env"
-  },
+  }
 }
 
